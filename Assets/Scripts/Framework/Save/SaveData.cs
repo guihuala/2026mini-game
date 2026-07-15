@@ -16,6 +16,7 @@ public class SaveData
     public int currentLevel;
     public List<string> unlockedLevels = new List<string>();
     public DialogueSaveData dialogue = new DialogueSaveData();
+    public ExplorationSaveData exploration = new ExplorationSaveData();
 
     public SaveData()
     {
@@ -23,6 +24,18 @@ public class SaveData
         lastSaveTime = createdTime;
         slotName = "New Save";
     }
+}
+
+[Serializable]
+public class ExplorationSaveData
+{
+    public string spawnPointId;
+    public float positionX;
+    public float positionY;
+    public float positionZ;
+    public float facingX;
+    public float facingZ = 1f;
+    public bool hasPosition;
 }
 
 [Serializable]

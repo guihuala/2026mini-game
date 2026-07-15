@@ -18,6 +18,6 @@ MonoBehaviour:
     displayNameKey: scene.main_menu
     useLoadingScreen: 1
   - scene: 1
-    sceneName: GamePlay
+    sceneName: PaperDiorama
     displayNameKey: scene.gameplay
     useLoadingScreen: 1

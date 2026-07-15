@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GamePlay.unity
     guid: 68e2047b7eb054b28a9dd8efe72190b7
+  - enabled: 1
+    path: Assets/Scenes/PaperDiorama.unity
+    guid: 5e0f9cd78acf74fc69c0f557e6b7a6d4
   m_configObjects: {}
