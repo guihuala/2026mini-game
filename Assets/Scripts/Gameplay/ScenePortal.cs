@@ -20,13 +20,14 @@ public sealed class ScenePortal : MonoBehaviour, IInteractable
         if (!CanInteract(interactor)) return;
         loading = true;
         ExplorationSession.SavePlayer(interactor.GetComponent<PlayerMotor>(), destinationSpawnPoint);
-        if (SaveManager.Instance != null) SaveManager.Instance.SaveGame();
         if (completesDemo && demoCompletion != null)
         {
             demoCompletion.Show();
+            if (SaveManager.Instance != null) SaveManager.Instance.SaveGame();
             loading = false;
             return;
         }
+        if (SaveManager.Instance != null) SaveManager.Instance.SaveGame();
         StartCoroutine(Reload());
     }
 

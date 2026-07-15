@@ -23,3 +23,11 @@ MonoBehaviour:
     uiPath: Panel/ConfirmPanel
   - uiName: DialoguePanel
     uiPath: Panel/DialoguePanel
+  - uiName: GreyboxHudPanel
+    uiPath: Panel/GreyboxHudPanel
+  - uiName: GreyboxDebugPanel
+    uiPath: Panel/GreyboxDebugPanel
+  - uiName: DirectionMinigamePanel
+    uiPath: Panel/DirectionMinigamePanel
+  - uiName: DemoCompletionPanel
+    uiPath: Panel/DemoCompletionPanel

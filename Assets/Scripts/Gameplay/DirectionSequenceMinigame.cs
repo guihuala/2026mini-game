@@ -15,18 +15,9 @@ public sealed class DirectionSequenceMinigame : MonoBehaviour, IMinigame
     private float startTime;
     private float remaining;
     private string feedback;
-    private GUIStyle titleStyle;
-    private GUIStyle promptStyle;
-    private GUIStyle centerStyle;
+    private DirectionMinigamePanel panel;
 
     public bool IsRunning { get; private set; }
-
-    private void Awake()
-    {
-        titleStyle = new GUIStyle { fontSize = 25, alignment = TextAnchor.MiddleCenter, normal = { textColor = Color.white } };
-        promptStyle = new GUIStyle { fontSize = 48, alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold, normal = { textColor = new Color(.25f, 1f, .75f) } };
-        centerStyle = new GUIStyle { fontSize = 18, alignment = TextAnchor.MiddleCenter, normal = { textColor = Color.white } };
-    }
 
     public void StartGame(MinigameContext newContext, Action<MinigameResult> onCompleted)
     {
@@ -40,13 +31,18 @@ public sealed class DirectionSequenceMinigame : MonoBehaviour, IMinigame
         feedback = string.Empty;
         IsRunning = true;
         ExplorationControlLock.Acquire(this);
+        panel = UIManager.Instance != null
+            ? UIManager.Instance.OpenPanel("DirectionMinigamePanel", null, UIPanelLayer.Top) as DirectionMinigamePanel
+            : null;
         PickNext();
+        RefreshPanel();
     }
 
     private void Update()
     {
         if (!IsRunning) return;
         remaining -= Time.unscaledDeltaTime;
+        RefreshPanel();
         if (remaining <= 0f) { Finish(false, false, "timeout"); return; }
         if (Input.GetKeyDown(KeyCode.Backspace)) { CancelGame(); return; }
 
@@ -76,11 +72,19 @@ public sealed class DirectionSequenceMinigame : MonoBehaviour, IMinigame
 
     private void PickNext() => currentKey = random.Next(0, Keys.Length);
 
+    private void RefreshPanel()
+    {
+        if (panel != null) panel.SetView(Labels[currentKey], progress, requiredInputs, remaining, feedback);
+    }
+
     private void Finish(bool succeeded, bool cancelled, string tag)
     {
         if (!IsRunning) return;
         IsRunning = false;
         ExplorationControlLock.Release(this);
+        if (UIManager.Instance != null && UIManager.Instance.IsPanelOpen("DirectionMinigamePanel"))
+            UIManager.Instance.ClosePanel("DirectionMinigamePanel");
+        panel = null;
         Action<MinigameResult> callback = completion;
         completion = null;
         callback?.Invoke(new MinigameResult
@@ -99,18 +103,4 @@ public sealed class DirectionSequenceMinigame : MonoBehaviour, IMinigame
         if (IsRunning) CancelGame();
     }
 
-    private void OnGUI()
-    {
-        if (!IsRunning) return;
-        float width = 520f;
-        float left = (Screen.width - width) * .5f;
-        float top = (Screen.height - 300f) * .5f;
-        GUI.Box(new Rect(left, top, width, 300f), "");
-        GUI.Label(new Rect(left, top + 20, width, 40), "方向校准 · 占位小游戏", titleStyle);
-        GUI.Label(new Rect(left, top + 72, width, 70), Labels[currentKey], promptStyle);
-        GUI.Label(new Rect(left, top + 150, width, 30), $"进度  {progress} / {requiredInputs}", centerStyle);
-        GUI.Label(new Rect(left, top + 182, width, 30), $"剩余时间  {remaining:0.0}s", centerStyle);
-        GUI.Label(new Rect(left, top + 214, width, 28), feedback, centerStyle);
-        GUI.Label(new Rect(left, top + 252, width, 28), "按对应 WASD · Backspace 退出", centerStyle);
-    }
 }

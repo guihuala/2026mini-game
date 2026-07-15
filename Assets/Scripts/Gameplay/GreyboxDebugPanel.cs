@@ -1,53 +1,68 @@
 using UnityEngine;
+using UnityEngine.UI;
 
-public sealed class GreyboxDebugPanel : MonoBehaviour
+public sealed class GreyboxDebugPanel : BasePanel
 {
-    [SerializeField] private PlayerMotor player;
-    private bool visible;
-    private Rect windowRect = new Rect(16, 105, 340, 310);
+    [SerializeField] private Text stateText;
+    [SerializeField] private Button resetButton;
+    [SerializeField] private Button openGateButton;
+    [SerializeField] private Button completeMinigameButton;
+    [SerializeField] private Button startSpawnButton;
+    [SerializeField] private Button returnSpawnButton;
+    [SerializeField] private Button saveButton;
+    [SerializeField] private Button loadButton;
+    private PlayerMotor player;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        resetButton.onClick.AddListener(ResetFlags);
+        openGateButton.onClick.AddListener(() => DialogueRuntimeState.SetFlag("greybox.gate_open", true));
+        completeMinigameButton.onClick.AddListener(() => DialogueRuntimeState.SetFlag("greybox.minigame_complete", true));
+        startSpawnButton.onClick.AddListener(() => WarpTo("Start"));
+        returnSpawnButton.onClick.AddListener(() => WarpTo("Return"));
+        saveButton.onClick.AddListener(Save);
+        loadButton.onClick.AddListener(Load);
+    }
+
+    public void Configure(PlayerMotor target) => player = target;
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F1)) visible = !visible;
+        if (stateText == null) return;
+        stateText.text =
+            $"intro_seen: {DialogueRuntimeState.HasFlag("greybox.intro_seen")}\n" +
+            $"gate_open: {DialogueRuntimeState.HasFlag("greybox.gate_open")}\n" +
+            $"minigame_complete: {DialogueRuntimeState.HasFlag("greybox.minigame_complete")}\n" +
+            $"demo_complete: {DialogueRuntimeState.HasFlag("greybox.demo_complete")}";
     }
 
-    private void OnGUI()
+    private void ResetFlags()
     {
-        GUI.Label(new Rect(18, 88, 240, 24), "F1：剧情调试工具");
-        if (visible) windowRect = GUI.Window(GetInstanceID(), windowRect, DrawWindow, "Greybox Narrative Debug");
+        DialogueRuntimeState.SetFlag("greybox.intro_seen", false);
+        DialogueRuntimeState.SetFlag("greybox.gate_open", false);
+        DialogueRuntimeState.SetFlag("greybox.minigame_complete", false);
+        DialogueRuntimeState.SetFlag("greybox.demo_complete", false);
+        ExplorationControlLock.Reset();
     }
 
-    private void DrawWindow(int id)
+    private void Save()
     {
-        GUILayout.Label("intro_seen: " + DialogueRuntimeState.HasFlag("greybox.intro_seen"));
-        GUILayout.Label("gate_open: " + DialogueRuntimeState.HasFlag("greybox.gate_open"));
-        GUILayout.Label("minigame_complete: " + DialogueRuntimeState.HasFlag("greybox.minigame_complete"));
-        GUILayout.Label("demo_complete: " + DialogueRuntimeState.HasFlag("greybox.demo_complete"));
-        if (GUILayout.Button("重置剧情 Flags"))
-        {
-            DialogueRuntimeState.SetFlag("greybox.intro_seen", false);
-            DialogueRuntimeState.SetFlag("greybox.gate_open", false);
-            DialogueRuntimeState.SetFlag("greybox.minigame_complete", false);
-            DialogueRuntimeState.SetFlag("greybox.demo_complete", false);
-            ExplorationControlLock.Reset();
-        }
-        if (GUILayout.Button("直接开启道路")) DialogueRuntimeState.SetFlag("greybox.gate_open", true);
-        if (GUILayout.Button("直接完成小游戏")) DialogueRuntimeState.SetFlag("greybox.minigame_complete", true);
-        if (GUILayout.Button("传送到 Start")) WarpTo("Start");
-        if (GUILayout.Button("传送到 Return")) WarpTo("Return");
-        if (GUILayout.Button("保存当前状态") && FindObjectOfType<ExplorationSession>() is ExplorationSession session) session.SaveNow(null);
-        if (GUILayout.Button("读取当前槽位") && SaveManager.Instance != null)
-        {
-            SaveManager.Instance.LoadGame();
-            WarpFromSave();
-        }
-        GUI.DragWindow(new Rect(0, 0, 10000, 24));
+        ExplorationSession session = FindObjectOfType<ExplorationSession>();
+        if (session != null) session.SaveNow(null);
+    }
+
+    private void Load()
+    {
+        if (SaveManager.Instance == null) return;
+        SaveManager.Instance.LoadGame();
+        WarpFromSave();
     }
 
     private void WarpTo(string id)
     {
         if (player == null) player = FindObjectOfType<PlayerMotor>();
-        foreach (var spawn in FindObjectsOfType<ExplorationSpawnPoint>())
+        foreach (ExplorationSpawnPoint spawn in FindObjectsOfType<ExplorationSpawnPoint>())
             if (spawn.Id == id) { player.Warp(spawn.transform.position, Vector3.forward); break; }
     }
 
