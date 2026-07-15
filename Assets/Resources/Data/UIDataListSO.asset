@@ -17,8 +17,6 @@ MonoBehaviour:
     uiPath: Panel/SettingPanel
   - uiName: PausePanel
     uiPath: Panel/PausePanel
-  - uiName: SavePanel
-    uiPath: Panel/SavePanel
   - uiName: ConfirmPanel
     uiPath: Panel/ConfirmPanel
   - uiName: DialoguePanel

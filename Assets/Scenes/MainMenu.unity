@@ -416,7 +416,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   newGameButton: {fileID: 839880491}
-  saveButton: {fileID: 2100000002}
+  continueButton: {fileID: 2100000002}
   settingsButton: {fileID: 1169643360}
   exitButton: {fileID: 889894938}
 --- !u!114 &739666819
@@ -724,7 +724,7 @@ GameObject:
   - component: {fileID: 2100000002}
   - component: {fileID: 2100000005}
   m_Layer: 5
-  m_Name: Save
+  m_Name: ContinueGame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -931,7 +931,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: save
+  m_Text: continue game
 --- !u!114 &2100000102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -944,7 +944,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30000000000000000000000000000005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localizationKey: ui.save
+  localizationKey: ui.continue_game
 --- !u!222 &2100000013
 CanvasRenderer:
   m_ObjectHideFlags: 0

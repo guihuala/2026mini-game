@@ -15,8 +15,21 @@ public sealed class GreyboxHud : MonoBehaviour
 
     private void Update()
     {
-        if (panel == null) return;
-        bool canShow = DialogueManager.Instance == null || !DialogueManager.Instance.IsPlaying;
-        panel.SetPrompt(canShow && interactor != null ? interactor.CurrentPrompt : string.Empty);
+        HandlePauseInput();
+
+        if (panel != null)
+        {
+            bool canShow = DialogueManager.Instance == null || !DialogueManager.Instance.IsPlaying;
+            panel.SetPrompt(canShow && interactor != null ? interactor.CurrentPrompt : string.Empty);
+        }
+    }
+
+    private void HandlePauseInput()
+    {
+        if (InputManager.Instance == null || !InputManager.Instance.GetActionDown(InputActionType.Pause)) return;
+        if (GameManager.Instance == null) return;
+
+        if (GameManager.Instance.IsPaused) GameManager.Instance.ResumeGame();
+        else GameManager.Instance.PauseGame();
     }
 }

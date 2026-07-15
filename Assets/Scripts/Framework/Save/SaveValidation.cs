@@ -34,7 +34,7 @@ public static class SaveValidation
     public const int CurrentVersion = 1;
     public const string DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
 
-    public static List<SaveValidationIssue> Validate(SaveData data, int expectedSlotIndex = -1)
+    public static List<SaveValidationIssue> Validate(SaveData data)
     {
         List<SaveValidationIssue> issues = new List<SaveValidationIssue>();
 
@@ -51,21 +51,6 @@ public static class SaveValidation
         else if (data.version > CurrentVersion)
         {
             issues.Add(new SaveValidationIssue(SaveValidationSeverity.Warning, nameof(data.version), $"Save version {data.version} is newer than supported version {CurrentVersion}."));
-        }
-
-        if (expectedSlotIndex >= 0 && data.slotIndex != expectedSlotIndex)
-        {
-            issues.Add(new SaveValidationIssue(SaveValidationSeverity.Warning, nameof(data.slotIndex), $"Slot index is {data.slotIndex}, expected {expectedSlotIndex}."));
-        }
-
-        if (data.slotIndex < 0)
-        {
-            issues.Add(new SaveValidationIssue(SaveValidationSeverity.Warning, nameof(data.slotIndex), "Slot index has not been assigned."));
-        }
-
-        if (string.IsNullOrWhiteSpace(data.slotName))
-        {
-            issues.Add(new SaveValidationIssue(SaveValidationSeverity.Warning, nameof(data.slotName), "Slot name is empty."));
         }
 
         DateTime createdTime;

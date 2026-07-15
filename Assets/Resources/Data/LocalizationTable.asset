@@ -23,6 +23,8 @@ MonoBehaviour:
       value: "\u65B0\u6E38\u620F"
     - key: ui.save
       value: "\u5B58\u6863"
+    - key: ui.continue_game
+      value: "\u7EE7\u7EED\u6E38\u620F"
     - key: ui.settings
       value: "\u8BBE\u7F6E"
     - key: ui.quit
@@ -84,7 +86,9 @@ MonoBehaviour:
     - key: save.title
       value: "\u5B58\u6863"
     - key: save.title.new_game_select
-      value: "\u9009\u62E9\u65B0\u6E38\u620F\u5B58\u6863"
+      value: "\u5F00\u59CB\u65B0\u6E38\u620F"
+    - key: save.single_name
+      value: "\u6E38\u620F\u8FDB\u5EA6"
     - key: save.new
       value: "\u65B0\u5EFA"
     - key: save.load
@@ -106,13 +110,13 @@ MonoBehaviour:
     - key: save.no_metadata
       value: "\u65E0\u5143\u6570\u636E"
     - key: save.no_data_in_slot
-      value: "\u8BE5\u5B58\u6863\u4F4D\u6CA1\u6709\u6570\u636E\u3002"
+      value: "\u5C1A\u65E0\u6E38\u620F\u8FDB\u5EA6\u3002"
     - key: save.invalid_slot_detail
       value: "\u8BE5\u5B58\u6863\u6587\u4EF6\u5DF2\u635F\u574F\u6216\u672A\u901A\u8FC7\u9A8C\u8BC1\u3002\u8BFB\u53D6\u65F6\u4F1A\u521B\u5EFA\u65B0\u6570\u636E\u3002"
     - key: save.state.exists
       value: "\u5B58\u6863\u6587\u4EF6\u5B58\u5728"
     - key: save.state.empty_slot
-      value: "\u7A7A\u5B58\u6863\u4F4D"
+      value: "\u5C1A\u65E0\u5B58\u6863"
     - key: save.state.invalid_slot
       value: "\u5B58\u6863\u6587\u4EF6\u65E0\u6548"
     - key: save.metadata
@@ -139,10 +143,14 @@ MonoBehaviour:
       value: "\u5F00\u59CB\u65B0\u6E38\u620F"
     - key: save.confirm.new_message
       value: "\u5B58\u6863\u4F4D {0} \u5DF2\u6709\u6570\u636E\u3002\u8981\u8986\u76D6\u5E76\u5F00\u59CB\u65B0\u6E38\u620F\u5417\uFF1F"
+    - key: save.confirm.new_message_single
+      value: "\u5DF2\u6709\u6E38\u620F\u8FDB\u5EA6\u3002\u8981\u8986\u76D6\u5E76\u5F00\u59CB\u65B0\u6E38\u620F\u5417\uFF1F"
     - key: save.confirm.delete_title
       value: "\u5220\u9664\u5B58\u6863"
     - key: save.confirm.delete_message
       value: "\u8981\u5220\u9664\u5B58\u6863\u4F4D {0} \u7684\u6570\u636E\u5417\uFF1F"
+    - key: save.confirm.delete_message_single
+      value: "\u8981\u5220\u9664\u5F53\u524D\u6E38\u620F\u8FDB\u5EA6\u5417\uFF1F"
     - key: dialogue.village.oldman.001.0
       value: "\u4F60\u597D\uFF0C{playerName}\u3002\u4F60\u771F\u7684\u8981\u8FDB\u5165<color=red>\u7981\u5730</color>\u5417\uFF1F"
     - key: dialogue.village.oldman.001.1
@@ -212,6 +220,8 @@ MonoBehaviour:
       value: New Game
     - key: ui.save
       value: Save
+    - key: ui.continue_game
+      value: Continue
     - key: ui.settings
       value: Settings
     - key: ui.quit
@@ -273,7 +283,9 @@ MonoBehaviour:
     - key: save.title
       value: Save Slots
     - key: save.title.new_game_select
-      value: Select New Game Slot
+      value: Start New Game
+    - key: save.single_name
+      value: Game Progress
     - key: save.new
       value: New
     - key: save.load
@@ -295,14 +307,14 @@ MonoBehaviour:
     - key: save.no_metadata
       value: No metadata
     - key: save.no_data_in_slot
-      value: No save data in this slot.
+      value: No game progress yet.
     - key: save.invalid_slot_detail
       value: This save file is corrupted or failed validation. Loading it will create
         new data.
     - key: save.state.exists
       value: Save file exists
     - key: save.state.empty_slot
-      value: Empty slot
+      value: No save yet
     - key: save.state.invalid_slot
       value: Invalid save file
     - key: save.metadata
@@ -338,10 +350,14 @@ MonoBehaviour:
       value: Start New Game
     - key: save.confirm.new_message
       value: Slot {0} already has data. Overwrite it and start a new game?
+    - key: save.confirm.new_message_single
+      value: Game progress already exists. Overwrite it and start a new game?
     - key: save.confirm.delete_title
       value: Delete Save
     - key: save.confirm.delete_message
       value: Delete the data in slot {0}?
+    - key: save.confirm.delete_message_single
+      value: Delete the current game progress?
     - key: dialogue.village.oldman.001.0
       value: Hello, {playerName}. Are you really going into the <color=red>forbidden
         land</color>?

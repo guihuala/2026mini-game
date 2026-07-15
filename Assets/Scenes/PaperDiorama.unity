@@ -2397,7 +2397,6 @@ GameObject:
   - component: {fileID: 1133897451}
   - component: {fileID: 1133897450}
   - component: {fileID: 1133897449}
-  - component: {fileID: 1133897448}
   - component: {fileID: 1133897453}
   - component: {fileID: 1133897455}
   - component: {fileID: 1133897454}
@@ -2408,18 +2407,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1133897448
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1133897447}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6e7a8747c9e9435fbb5d7ae7020923c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1133897449
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2586,7 +2573,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6a636f10c3514fc4192b46fae54e053a, type: 2}
+  - {fileID: 2100000, guid: 2de7633ee55847346bdfa61703a34148, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

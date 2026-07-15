@@ -99,9 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   saveDirectoryName: Saves
-  saveFilePrefix: save_slot_
-  slotCount: 4
-  currentSlotIndex: 0
+  saveFileName: save.json
   loadOnAwake: 0
 --- !u!114 &1301348935869840100
 MonoBehaviour:

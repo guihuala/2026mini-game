@@ -28,30 +28,33 @@ public class TimeManager : Singleton<TimeManager>
         }
     }
 
-    // 更新时间
-    private void Update()
-    {
-        if (!IsPaused)
-        {
-            Time.timeScale = TimeFactor; 
-        }
-    }
-
     // 设置时间倍率
     public void SetTimeFactor(float factor)
     {
-        TimeFactor = factor;
+        TimeFactor = Mathf.Max(0f, factor);
+        if (!IsPaused)
+        {
+            ApplyTimeScale();
+        }
     }
 
     // 暂停时间
     public void PauseTime()
     {
         IsPaused = true;
+        ApplyTimeScale();
     }
 
     // 恢复时间
     public void ResumeTime()
     {
         IsPaused = false;
+        ApplyTimeScale();
+    }
+
+    private void ApplyTimeScale()
+    {
+        Time.timeScale = IsPaused ? 0f : TimeFactor;
+        Time.fixedDeltaTime = 0.02f * Mathf.Max(TimeFactor, 0.0001f);
     }
 }

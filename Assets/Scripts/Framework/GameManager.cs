@@ -10,10 +10,13 @@ public class GameManager : Singleton<GameManager>
     }
 
     private GameState currentState;
+    public GameState CurrentState => currentState;
+    public bool IsPaused => currentState == GameState.Paused;
 
     // 游戏开始时初始化状态
     void Start()
     {
+        SetGameState(GameState.Playing);
     }
 
     public void SetGameState(GameState newState)
@@ -23,20 +26,20 @@ public class GameManager : Singleton<GameManager>
         switch (newState)
         {
             case GameState.Playing:
-                Time.timeScale = 1;
+                SetPaused(false);
                 ClosePanelIfOpen("SettingPanel");
                 ClosePanelIfOpen("PausePanel");
                 ClosePanelIfOpen("GameResultPanel");
                 break;
 
             case GameState.Paused:
-                Time.timeScale = 0;
-                UIManager.Instance.OpenPanel("PausePanel");
+                SetPaused(true);
+                if (UIManager.Instance != null) UIManager.Instance.OpenPanel("PausePanel", null, UIPanelLayer.Top);
                 break;
 
             case GameState.GameOver:
-                Time.timeScale = 0;
-                UIManager.Instance.OpenPanel("GameResultPanel");
+                SetPaused(true);
+                if (UIManager.Instance != null) UIManager.Instance.OpenPanel("GameResultPanel");
                 break;
         }
     }
@@ -76,8 +79,9 @@ public class GameManager : Singleton<GameManager>
     // 返回主菜单
     public void ReturnToMainMenu()
     {
+        if (SaveManager.Instance != null) SaveManager.Instance.SaveGame();
         SetGameState(GameState.Playing);
-        SceneLoader.Instance.LoadScene(GameScene.MainMenu);
+        if (SceneLoader.Instance != null) SceneLoader.Instance.LoadScene(GameScene.MainMenu);
     }
 
     private void ClosePanelIfOpen(string panelName)
@@ -86,6 +90,18 @@ public class GameManager : Singleton<GameManager>
         {
             UIManager.Instance.ClosePanel(panelName);
         }
+    }
+
+    private void SetPaused(bool paused)
+    {
+        if (TimeManager.Instance != null)
+        {
+            if (paused) TimeManager.Instance.PauseTime();
+            else TimeManager.Instance.ResumeTime();
+            return;
+        }
+
+        Time.timeScale = paused ? 0f : 1f;
     }
 
     #endregion
