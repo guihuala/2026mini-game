@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,6 +33,12 @@ public class DialoguePanel : BasePanel
     [SerializeField] private float acceleratedInterval = 0.005f;
     [SerializeField] private float defaultAutoPlayDelay = 1.2f;
 
+    [Header("Dialogue Motion")]
+    [SerializeField] private float lineEnterDuration = 0.22f;
+    [SerializeField] private float lineEnterDistance = 12f;
+    [SerializeField] private float portraitEnterDuration = 0.28f;
+    [SerializeField] private float optionStagger = 0.06f;
+
     [Header("Options")]
     [SerializeField] private GameObject optionRoot;
     [SerializeField] private Button[] optionButtons;
@@ -47,6 +54,8 @@ public class DialoguePanel : BasePanel
     private bool _autoPlay;
     private bool _isAccelerating;
     private string _currentFullText;
+    private RectTransform _dialogueRect;
+    private Vector2 _dialogueRestPosition;
 
     private void Start()
     {
@@ -55,6 +64,9 @@ public class DialoguePanel : BasePanel
         if (skipButton != null) skipButton.onClick.AddListener(OnSkipClicked);
         InitOptionButtons();
         RefreshAutoPlayText();
+
+        _dialogueRect = dialogueText != null ? dialogueText.rectTransform : null;
+        if (_dialogueRect != null) _dialogueRestPosition = _dialogueRect.anchoredPosition;
     }
 
     private void Update()
@@ -122,6 +134,7 @@ public class DialoguePanel : BasePanel
         DialogueLine line = _lines[_lineIndex];
         HideOptions();
         ApplyLineVisuals(line);
+        PlayLineEnterMotion();
 
         _currentFullText = DialogueVariableResolver.Resolve(line.text);
         if (_typingCoroutine != null)
@@ -162,6 +175,7 @@ public class DialoguePanel : BasePanel
         _typingCoroutine = null;
 
         RefreshOptions();
+        PlayHintMotion();
         if (_visibleOptions.Count > 0)
         {
             _autoPlay = false;
@@ -272,6 +286,7 @@ public class DialoguePanel : BasePanel
                 if (optionButtons[i] != null)
                 {
                     optionButtons[i].gameObject.SetActive(visible);
+                    if (visible) PlayOptionEnterMotion(optionButtons[i], i);
                 }
 
                 Text optionText = GetOptionText(i);
@@ -341,11 +356,13 @@ public class DialoguePanel : BasePanel
             ? line.portraitOverride
             : character != null ? character.GetExpressionPortrait(line.expression) : null;
         SetImage(portraitRoot, portraitImage, portrait);
+        PlayVisualEnterMotion(portraitRoot);
 
         Sprite standing = line.standingOverride != null
             ? line.standingOverride
             : character != null ? character.DefaultStanding : null;
         SetImage(standingRoot, standingImage, standing);
+        PlayVisualEnterMotion(standingRoot);
 
         if (boxBackground != null)
         {
@@ -370,6 +387,84 @@ public class DialoguePanel : BasePanel
             image.sprite = sprite;
             image.enabled = sprite != null;
         }
+    }
+
+    private void PlayLineEnterMotion()
+    {
+        if (dialogueText == null) return;
+
+        dialogueText.DOKill();
+        dialogueText.color = new Color(dialogueText.color.r, dialogueText.color.g, dialogueText.color.b, 0f);
+        dialogueText.DOFade(1f, lineEnterDuration).SetEase(Ease.OutQuad).SetUpdate(true);
+
+        if (_dialogueRect == null)
+        {
+            _dialogueRect = dialogueText.rectTransform;
+            _dialogueRestPosition = _dialogueRect.anchoredPosition;
+        }
+        _dialogueRect.DOKill();
+        _dialogueRect.anchoredPosition = _dialogueRestPosition - Vector2.up * lineEnterDistance;
+        _dialogueRect.DOAnchorPos(_dialogueRestPosition, lineEnterDuration).SetEase(Ease.OutCubic).SetUpdate(true);
+    }
+
+    private void PlayVisualEnterMotion(GameObject root)
+    {
+        if (root == null || !root.activeInHierarchy) return;
+
+        Transform visual = root.transform;
+        visual.DOKill();
+        visual.localScale = Vector3.one * 0.94f;
+        visual.DOScale(Vector3.one, portraitEnterDuration).SetEase(Ease.OutBack).SetUpdate(true);
+
+        CanvasGroup group = root.GetComponent<CanvasGroup>();
+        if (group == null) group = root.AddComponent<CanvasGroup>();
+        group.DOKill();
+        group.alpha = 0f;
+        group.DOFade(1f, portraitEnterDuration * 0.8f).SetEase(Ease.OutQuad).SetUpdate(true);
+    }
+
+    private void PlayOptionEnterMotion(Button button, int index)
+    {
+        Transform option = button.transform;
+        option.DOKill();
+        option.localScale = new Vector3(0.94f, 0.94f, 1f);
+
+        CanvasGroup group = button.GetComponent<CanvasGroup>();
+        if (group == null) group = button.gameObject.AddComponent<CanvasGroup>();
+        group.DOKill();
+        group.alpha = 0f;
+
+        float delay = Mathf.Max(0f, index * optionStagger);
+        group.DOFade(1f, 0.18f).SetDelay(delay).SetEase(Ease.OutQuad).SetUpdate(true);
+        option.DOScale(Vector3.one, 0.24f).SetDelay(delay).SetEase(Ease.OutBack).SetUpdate(true);
+    }
+
+    private void PlayHintMotion()
+    {
+        if (hintText == null || !hintText.gameObject.activeInHierarchy) return;
+        hintText.transform.DOKill();
+        hintText.transform.localScale = Vector3.one;
+        hintText.transform.DOPunchScale(Vector3.one * 0.06f, 0.28f, 4, 0.35f).SetUpdate(true);
+    }
+
+    protected override void OnDestroy()
+    {
+        if (dialogueText != null)
+        {
+            dialogueText.DOKill();
+            dialogueText.rectTransform.DOKill();
+        }
+        if (portraitRoot != null) portraitRoot.transform.DOKill();
+        if (standingRoot != null) standingRoot.transform.DOKill();
+        if (hintText != null) hintText.transform.DOKill();
+        if (optionButtons != null)
+        {
+            foreach (Button button in optionButtons)
+            {
+                if (button != null) button.transform.DOKill();
+            }
+        }
+        base.OnDestroy();
     }
 
     private Color GetStyleColor(DialogueBoxStyle style)
