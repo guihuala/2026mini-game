@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System;
 using SimpleUITips;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,8 +8,7 @@ public class SettingsPanel : BasePanel
     private enum SettingsTab
     {
         Audio,
-        Video,
-        Input
+        Video
     }
 
     [Header("页签")]
@@ -20,20 +18,6 @@ public class SettingsPanel : BasePanel
     [SerializeField] private GameObject audioPage;
     [SerializeField] private GameObject videoPage;
     [SerializeField] private GameObject inputPage;
-
-    [Header("输入重绑定")]
-    [SerializeField] private Button jumpKeyButton;
-    [SerializeField] private Button attackKeyButton;
-    [SerializeField] private Button interactKeyButton;
-    [SerializeField] private Button pauseKeyButton;
-    [SerializeField] private Button confirmKeyButton;
-    [SerializeField] private Button cancelKeyButton;
-    [SerializeField] private Text jumpKeyText;
-    [SerializeField] private Text attackKeyText;
-    [SerializeField] private Text interactKeyText;
-    [SerializeField] private Text pauseKeyText;
-    [SerializeField] private Text confirmKeyText;
-    [SerializeField] private Text cancelKeyText;
 
     [Header("通用组件 - 音频")]
     public Slider bgmVolumeSlider;
@@ -53,32 +37,15 @@ public class SettingsPanel : BasePanel
     public Button resetButton;    
     
     private Resolution[] _resolutions; // 缓存系统支持的分辨率列表
-    private InputActionType? _waitingForInputAction;
-
     private void Start()
     {
         InitTabs();
         InitAudioSettings();
         InitVideoSettings();
-        InitLanguageSettings();
+        HideUnusedLanguageControls();
         InitButtons();
-        InitInputRebindButtons();
+        HideUnusedInputControls();
         ShowTab(SettingsTab.Audio);
-    }
-
-    private void Update()
-    {
-        if (!_waitingForInputAction.HasValue) return;
-
-        foreach (KeyCode keyCode in Enum.GetValues(typeof(KeyCode)))
-        {
-            if (!Input.GetKeyDown(keyCode)) continue;
-
-            InputManager.Instance.SetKeys(_waitingForInputAction.Value, new[] { keyCode });
-            _waitingForInputAction = null;
-            RefreshInputLabels();
-            return;
-        }
     }
     
     private void InitAudioSettings()
@@ -139,16 +106,18 @@ public class SettingsPanel : BasePanel
         if(clearDataButton) clearDataButton.onClick.AddListener(OnClearDataClick);
     }
 
-    private void InitLanguageSettings()
+    private void HideUnusedLanguageControls()
     {
-        if (chineseLanguageButton != null)
+        if (chineseLanguageButton != null && englishLanguageButton != null)
         {
-            chineseLanguageButton.onClick.AddListener(() => SetLanguage("zh-CN"));
-        }
-
-        if (englishLanguageButton != null)
-        {
-            englishLanguageButton.onClick.AddListener(() => SetLanguage("en-US"));
+            Transform commonParent = chineseLanguageButton.transform.parent;
+            if (commonParent == englishLanguageButton.transform.parent)
+                commonParent.gameObject.SetActive(false);
+            else
+            {
+                chineseLanguageButton.gameObject.SetActive(false);
+                englishLanguageButton.gameObject.SetActive(false);
+            }
         }
     }
 
@@ -156,18 +125,21 @@ public class SettingsPanel : BasePanel
     {
         if (audioTabButton) audioTabButton.onClick.AddListener(() => ShowTab(SettingsTab.Audio));
         if (videoTabButton) videoTabButton.onClick.AddListener(() => ShowTab(SettingsTab.Video));
-        if (inputTabButton) inputTabButton.onClick.AddListener(() => ShowTab(SettingsTab.Input));
+    }
+
+    private void HideUnusedInputControls()
+    {
+        if (inputTabButton != null) inputTabButton.gameObject.SetActive(false);
+        if (inputPage != null) inputPage.SetActive(false);
     }
 
     private void ShowTab(SettingsTab tab)
     {
         if (audioPage != null) audioPage.SetActive(tab == SettingsTab.Audio);
         if (videoPage != null) videoPage.SetActive(tab == SettingsTab.Video);
-        if (inputPage != null) inputPage.SetActive(tab == SettingsTab.Input);
 
         SetTabInteractable(audioTabButton, tab != SettingsTab.Audio);
         SetTabInteractable(videoTabButton, tab != SettingsTab.Video);
-        SetTabInteractable(inputTabButton, tab != SettingsTab.Input);
     }
 
     private void SetTabInteractable(Button button, bool interactable)
@@ -175,76 +147,6 @@ public class SettingsPanel : BasePanel
         if (button != null)
         {
             button.interactable = interactable;
-        }
-    }
-
-    private void InitInputRebindButtons()
-    {
-        if (jumpKeyButton) jumpKeyButton.onClick.AddListener(() => BeginRebind(InputActionType.Jump));
-        if (attackKeyButton) attackKeyButton.onClick.AddListener(() => BeginRebind(InputActionType.Attack));
-        if (interactKeyButton) interactKeyButton.onClick.AddListener(() => BeginRebind(InputActionType.Interact));
-        if (pauseKeyButton) pauseKeyButton.onClick.AddListener(() => BeginRebind(InputActionType.Pause));
-        if (confirmKeyButton) confirmKeyButton.onClick.AddListener(() => BeginRebind(InputActionType.Confirm));
-        if (cancelKeyButton) cancelKeyButton.onClick.AddListener(() => BeginRebind(InputActionType.Cancel));
-
-        RefreshInputLabels();
-    }
-
-    private void BeginRebind(InputActionType action)
-    {
-        if (InputManager.Instance == null) return;
-
-        _waitingForInputAction = action;
-        SetInputLabel(action, LocalizationManager.Get("input.press_key"));
-    }
-
-    private void RefreshInputLabels()
-    {
-        SetInputLabel(InputActionType.Jump, GetInputDisplayName(InputActionType.Jump));
-        SetInputLabel(InputActionType.Attack, GetInputDisplayName(InputActionType.Attack));
-        SetInputLabel(InputActionType.Interact, GetInputDisplayName(InputActionType.Interact));
-        SetInputLabel(InputActionType.Pause, GetInputDisplayName(InputActionType.Pause));
-        SetInputLabel(InputActionType.Confirm, GetInputDisplayName(InputActionType.Confirm));
-        SetInputLabel(InputActionType.Cancel, GetInputDisplayName(InputActionType.Cancel));
-    }
-
-    private string GetInputDisplayName(InputActionType action)
-    {
-        if (InputManager.Instance == null) return LocalizationManager.Get("common.not_available");
-
-        var keys = InputManager.Instance.GetKeys(action);
-        return keys.Count > 0 ? keys[0].ToString() : LocalizationManager.Get("common.none");
-    }
-
-    private void SetInputLabel(InputActionType action, string content)
-    {
-        Text target = null;
-
-        switch (action)
-        {
-            case InputActionType.Jump:
-                target = jumpKeyText;
-                break;
-            case InputActionType.Attack:
-                target = attackKeyText;
-                break;
-            case InputActionType.Interact:
-                target = interactKeyText;
-                break;
-            case InputActionType.Pause:
-                target = pauseKeyText;
-                break;
-            case InputActionType.Confirm:
-                target = confirmKeyText;
-                break;
-            case InputActionType.Cancel:
-                target = cancelKeyText;
-                break;
-        }
-
-        if (target != null)
-        {
-            target.text = content;
         }
     }
 
@@ -265,12 +167,6 @@ public class SettingsPanel : BasePanel
     {
         Screen.fullScreen = isFullscreen;
         Debug.Log($"全屏状态: {isFullscreen}");
-    }
-
-    public void SetLanguage(string languageCode)
-    {
-        LocalizationManager.SetLanguage(languageCode);
-        Debug.Log($"语言设置为: {languageCode}");
     }
 
     #endregion
@@ -316,7 +212,7 @@ public class SettingsPanel : BasePanel
         OnResetButtonClick(); 
         
         // 3. 弹出一个飘字提示
-        UIHelper.Instance.ShowFixedText(FixedUIPosType.Center, LocalizationManager.Get("settings.data_cleared"), 1.5f);
+        UIHelper.Instance.ShowFixedText(FixedUIPosType.Center, "数据已清空", 1.5f);
     }
 
     private void OnBackButtonClick()

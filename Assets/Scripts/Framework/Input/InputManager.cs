@@ -80,37 +80,6 @@ public class InputManager : SingletonPersistent<InputManager>
         return AnyKey(action, Input.GetKeyUp);
     }
 
-    public IReadOnlyList<KeyCode> GetKeys(InputActionType action)
-    {
-        if (!actionKeys.TryGetValue(action, out var keys))
-        {
-            return System.Array.Empty<KeyCode>();
-        }
-
-        return keys;
-    }
-
-    public void SetKeys(InputActionType action, IEnumerable<KeyCode> keys)
-    {
-        if (!actionKeys.TryGetValue(action, out var targetKeys))
-        {
-            targetKeys = new List<KeyCode>();
-            actionKeys[action] = targetKeys;
-        }
-
-        targetKeys.Clear();
-
-        if (keys == null) return;
-
-        foreach (var key in keys)
-        {
-            if (!targetKeys.Contains(key))
-            {
-                targetKeys.Add(key);
-            }
-        }
-    }
-
     public void SetInputEnabled(bool enabled)
     {
         inputEnabled = enabled;

@@ -94,13 +94,6 @@ public class GameManager : Singleton<GameManager>
 
     private void SetPaused(bool paused)
     {
-        if (TimeManager.Instance != null)
-        {
-            if (paused) TimeManager.Instance.PauseTime();
-            else TimeManager.Instance.ResumeTime();
-            return;
-        }
-
         Time.timeScale = paused ? 0f : 1f;
     }
 

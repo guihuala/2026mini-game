@@ -331,13 +331,6 @@ public class DialoguePanel : BasePanel
         DialogueRuntimeState.ApplyEffects(option.effects);
         HideOptions();
 
-        if (!string.IsNullOrEmpty(option.nextDialogueId) &&
-            DialogueManager.Instance != null &&
-            DialogueManager.Instance.PlayById(option.nextDialogueId))
-        {
-            return;
-        }
-
         ShowNextLine();
     }
 

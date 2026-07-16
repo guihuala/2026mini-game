@@ -190,7 +190,6 @@ GameObject:
   - component: {fileID: 504361126}
   - component: {fileID: 504361128}
   - component: {fileID: 504361127}
-  - component: {fileID: 2100000103}
   m_Layer: 5
   m_Name: Text (Legacy)
   m_TagString: Untagged
@@ -251,19 +250,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: settings
---- !u!114 &2100000103
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 504361125}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30000000000000000000000000000005, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  localizationKey: ui.settings
 --- !u!222 &504361128
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -871,7 +857,6 @@ GameObject:
   - component: {fileID: 2100000011}
   - component: {fileID: 2100000013}
   - component: {fileID: 2100000012}
-  - component: {fileID: 2100000102}
   m_Layer: 5
   m_Name: Text (Legacy)
   m_TagString: Untagged
@@ -932,19 +917,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: continue game
---- !u!114 &2100000102
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2100000010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30000000000000000000000000000005, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  localizationKey: ui.continue_game
 --- !u!222 &2100000013
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1264,7 +1236,6 @@ GameObject:
   - component: {fileID: 1386555166}
   - component: {fileID: 1386555168}
   - component: {fileID: 1386555167}
-  - component: {fileID: 2100000101}
   m_Layer: 5
   m_Name: Text (Legacy)
   m_TagString: Untagged
@@ -1325,19 +1296,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: new game
---- !u!114 &2100000101
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1386555165}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30000000000000000000000000000005, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  localizationKey: ui.new_game
 --- !u!222 &1386555168
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1396,7 +1354,6 @@ GameObject:
   - component: {fileID: 1516875161}
   - component: {fileID: 1516875163}
   - component: {fileID: 1516875162}
-  - component: {fileID: 2100000104}
   m_Layer: 5
   m_Name: Text (Legacy)
   m_TagString: Untagged
@@ -1457,19 +1414,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: quit
---- !u!114 &2100000104
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1516875160}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30000000000000000000000000000005, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  localizationKey: ui.quit
 --- !u!222 &1516875163
 CanvasRenderer:
   m_ObjectHideFlags: 0

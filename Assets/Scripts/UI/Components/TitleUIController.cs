@@ -26,8 +26,8 @@ public class TitleUIController : MonoBehaviour
         if (SaveManager.Instance != null && SaveManager.Instance.HasSave())
         {
             UIManager.Instance.OpenConfirm(
-                LocalizationManager.Get("save.confirm.new_title"),
-                LocalizationManager.Get("save.confirm.new_message_single"),
+                "开始新游戏",
+                "已有游戏进度。要覆盖并开始新游戏吗？",
                 StartNewGame);
             return;
         }
