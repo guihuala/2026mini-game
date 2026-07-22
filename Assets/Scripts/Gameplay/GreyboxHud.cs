@@ -21,6 +21,7 @@ public sealed class GreyboxHud : MonoBehaviour
         {
             bool canShow = DialogueManager.Instance == null || !DialogueManager.Instance.IsPlaying;
             panel.SetPrompt(canShow && interactor != null ? interactor.CurrentPrompt : string.Empty);
+            panel.SetQuest(DemoQuestChain.GetObjectiveText());
         }
     }
 

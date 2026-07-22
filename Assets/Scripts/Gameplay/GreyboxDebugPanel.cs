@@ -17,8 +17,8 @@ public sealed class GreyboxDebugPanel : BasePanel
     {
         base.Awake();
         resetButton.onClick.AddListener(ResetFlags);
-        openGateButton.onClick.AddListener(() => DialogueRuntimeState.SetFlag("greybox.gate_open", true));
-        completeMinigameButton.onClick.AddListener(() => DialogueRuntimeState.SetFlag("greybox.minigame_complete", true));
+        openGateButton.onClick.AddListener(DemoQuestChain.Accept);
+        completeMinigameButton.onClick.AddListener(DemoQuestChain.CompleteCalibration);
         startSpawnButton.onClick.AddListener(() => WarpTo("Start"));
         returnSpawnButton.onClick.AddListener(() => WarpTo("Return"));
         saveButton.onClick.AddListener(Save);
@@ -34,6 +34,11 @@ public sealed class GreyboxDebugPanel : BasePanel
             $"intro_seen: {DialogueRuntimeState.HasFlag("greybox.intro_seen")}\n" +
             $"gate_open: {DialogueRuntimeState.HasFlag("greybox.gate_open")}\n" +
             $"minigame_complete: {DialogueRuntimeState.HasFlag("greybox.minigame_complete")}\n" +
+            $"ending_unlocked: {DialogueRuntimeState.HasFlag("greybox.ending_unlocked")}\n" +
+            $"quest: {DialogueRuntimeState.GetQuestState(DemoQuestChain.QuestId)}\n" +
+            $"example_bell: {DialogueRuntimeState.HasItem(QuestObjectiveExamples.BellItemId)}\n" +
+            $"example_flowers: {DialogueRuntimeState.GetNumber(QuestObjectiveExamples.FlowerCountId):0}/3\n" +
+            $"example_beacon: {DialogueRuntimeState.HasFlag(QuestObjectiveExamples.BeaconFlagId)}\n" +
             $"demo_complete: {DialogueRuntimeState.HasFlag("greybox.demo_complete")}";
     }
 
@@ -42,7 +47,10 @@ public sealed class GreyboxDebugPanel : BasePanel
         DialogueRuntimeState.SetFlag("greybox.intro_seen", false);
         DialogueRuntimeState.SetFlag("greybox.gate_open", false);
         DialogueRuntimeState.SetFlag("greybox.minigame_complete", false);
+        DialogueRuntimeState.SetFlag("greybox.ending_unlocked", false);
         DialogueRuntimeState.SetFlag("greybox.demo_complete", false);
+        DialogueRuntimeState.SetQuestState(DemoQuestChain.QuestId, string.Empty);
+        QuestObjectiveExamples.ResetState();
         ExplorationControlLock.Reset();
     }
 

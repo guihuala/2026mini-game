@@ -17,6 +17,7 @@ public sealed class GreyboxHudPanel : BasePanel
     private Vector2 promptRestPosition;
     private string currentPrompt = string.Empty;
     private bool promptVisible;
+    private Text questText;
 
     protected override void Awake()
     {
@@ -30,6 +31,41 @@ public sealed class GreyboxHudPanel : BasePanel
 
         promptCanvasGroup.alpha = 0f;
         promptRoot.SetActive(false);
+        CreateQuestTracker();
+    }
+
+    public void SetQuest(string value)
+    {
+        if (questText != null && questText.text != value) questText.text = value ?? string.Empty;
+    }
+
+    private void CreateQuestTracker()
+    {
+        GameObject tracker = new GameObject("Quest Tracker", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        tracker.transform.SetParent(transform, false);
+        RectTransform rect = tracker.GetComponent<RectTransform>();
+        rect.anchorMin = new Vector2(0f, 1f);
+        rect.anchorMax = new Vector2(0f, 1f);
+        rect.pivot = new Vector2(0f, 1f);
+        rect.anchoredPosition = new Vector2(28f, -28f);
+        rect.sizeDelta = new Vector2(430f, 54f);
+        Image background = tracker.GetComponent<Image>();
+        background.color = new Color(0.04f, 0.05f, 0.07f, 0.82f);
+        background.raycastTarget = false;
+
+        GameObject label = new GameObject("Objective", typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
+        label.transform.SetParent(tracker.transform, false);
+        RectTransform labelRect = label.GetComponent<RectTransform>();
+        labelRect.anchorMin = Vector2.zero;
+        labelRect.anchorMax = Vector2.one;
+        labelRect.offsetMin = new Vector2(16f, 8f);
+        labelRect.offsetMax = new Vector2(-16f, -8f);
+        questText = label.GetComponent<Text>();
+        questText.font = promptText != null ? promptText.font : null;
+        questText.fontSize = 20;
+        questText.color = Color.white;
+        questText.alignment = TextAnchor.MiddleLeft;
+        questText.raycastTarget = false;
     }
 
     public void SetPrompt(string value)
