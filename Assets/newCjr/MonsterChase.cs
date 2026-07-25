@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
+using VInspector;
 
 public class MonsterChase : MonoBehaviour
 {
@@ -10,10 +11,12 @@ public class MonsterChase : MonoBehaviour
     [SerializeField] private float repathCooldown = 0.5f;
 
     private Seeker seeker;
-    [SerializeField] Rigidbody2D rb;
+    private Rigidbody2D rb;
     private List<Vector3> waypoints = new List<Vector3>();
-    [SerializeField] int currentIndex;
+    private int currentIndex;
     private Coroutine chaseRoutine;
+
+    public bool IsPaused { get; private set; }
 
     private void Awake()
     {
@@ -28,6 +31,31 @@ public class MonsterChase : MonoBehaviour
 
     private void Start()
     {
+        if (target != null)
+            chaseRoutine = StartCoroutine(ChaseLoop());
+    }
+
+    [Button("Pause")]
+    public void Pause()
+    {
+        if (IsPaused) return;
+        IsPaused = true;
+
+        if (chaseRoutine != null)
+        {
+            StopCoroutine(chaseRoutine);
+            chaseRoutine = null;
+        }
+
+        rb.velocity = Vector2.zero;
+    }
+    
+    [Button("Resume")]
+    public void Resume()
+    {
+        if (!IsPaused) return;
+        IsPaused = false;
+
         if (target != null)
             chaseRoutine = StartCoroutine(ChaseLoop());
     }
@@ -83,11 +111,7 @@ public class MonsterChase : MonoBehaviour
         {
             Vector3 nowtarget = waypoints[currentIndex];
             Vector3 current = transform.position;
-            
-            current.z = 0;
-            nowtarget.z = 0;
-            
-            
+
             if (Vector2.Distance(nowtarget, current) < 0.1f)
             {
                 currentIndex++;
@@ -97,13 +121,9 @@ public class MonsterChase : MonoBehaviour
                 current = transform.position;
             }
 
-            current.z = 0;
-            nowtarget.z = 0;
-
             Vector3 nextPosition = Vector2.MoveTowards(current, nowtarget, speed * Time.fixedDeltaTime);
-            nextPosition.z = 0;
-            Debug.Log(nextPosition);
-            transform.position = nextPosition;
+           nextPosition.z = 0;
+           transform.position = nextPosition;
 
             yield return new WaitForFixedUpdate();
         }
