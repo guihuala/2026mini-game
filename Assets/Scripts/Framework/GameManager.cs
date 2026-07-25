@@ -1,6 +1,7 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class GameManager : Singleton<GameManager>
+public class GameManager : SingletonPersistent<GameManager>
 {
     public enum GameState
     {
@@ -13,10 +14,66 @@ public class GameManager : Singleton<GameManager>
     public GameState CurrentState => currentState;
     public bool IsPaused => currentState == GameState.Paused;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        if (Instance != this) return;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
     // 游戏开始时初始化状态
     void Start()
     {
         SetGameState(GameState.Playing);
+        RefreshHud(SceneManager.GetActiveScene());
+    }
+
+    private void Update()
+    {
+        if (InputManager.Instance != null &&
+            InputManager.Instance.GetActionDown(InputActionType.Pause))
+        {
+            TogglePause();
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this) SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        SetGameState(GameState.Playing);
+        RefreshHud(scene);
+    }
+
+    private void RefreshHud(Scene scene)
+    {
+        if (UIManager.Instance == null) return;
+
+        bool isLevel = false;
+        LevelCatalog catalog = LevelProgress.Catalog;
+        if (catalog != null)
+        {
+            foreach (LevelDefinition level in catalog.Levels)
+            {
+                if (level != null && level.sceneName == scene.name)
+                {
+                    isLevel = true;
+                    break;
+                }
+            }
+        }
+
+        if (isLevel)
+        {
+            HUDPanel.Show(UIManager.Instance.UIRoot);
+        }
+        else
+        {
+            HUDPanel.Hide();
+        }
     }
 
     public void SetGameState(GameState newState)
@@ -61,6 +118,12 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    public void TogglePause()
+    {
+        if (currentState == GameState.Playing) PauseGame();
+        else if (currentState == GameState.Paused) ResumeGame();
+    }
+
     // 恢复游戏
     public void ResumeGame()
     {
@@ -73,6 +136,12 @@ public class GameManager : Singleton<GameManager>
     // 游戏结束
     public void EndGame()
     {
+        SetGameState(GameState.GameOver);
+    }
+
+    public void CompleteLevel()
+    {
+        LevelProgress.CompleteCurrentLevel();
         SetGameState(GameState.GameOver);
     }
 

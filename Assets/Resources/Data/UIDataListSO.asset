@@ -21,3 +21,5 @@ MonoBehaviour:
     uiPath: Panel/ConfirmPanel
   - uiName: DialoguePanel
     uiPath: Panel/DialoguePanel
+  - uiName: LevelSelectPanel
+    uiPath: Panel/LevelSelectPanel

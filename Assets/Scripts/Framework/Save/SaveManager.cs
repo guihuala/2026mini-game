@@ -32,6 +32,7 @@ public class SaveManager : SingletonPersistent<SaveManager>
     {
         DialogueRuntimeState.Reset();
         CurrentData = CreateNewSaveData();
+        LevelProgress.EnsureInitialized(CurrentData);
         ApplyMetadata(CurrentData);
         return CurrentData;
     }
@@ -57,6 +58,7 @@ public class SaveManager : SingletonPersistent<SaveManager>
 
             LogValidationWarnings(issues);
             CurrentData = data;
+            LevelProgress.EnsureInitialized(CurrentData);
             ApplyMetadata(CurrentData, false);
             RestoreRuntimeState(CurrentData);
             SaveLoaded?.Invoke(CurrentData);
@@ -126,7 +128,12 @@ public class SaveManager : SingletonPersistent<SaveManager>
         RestoreRuntimeState(CurrentData);
     }
 
-    private SaveData CreateNewSaveData() => new SaveData();
+    private SaveData CreateNewSaveData()
+    {
+        SaveData data = new SaveData();
+        LevelProgress.EnsureInitialized(data);
+        return data;
+    }
 
     private void ResetToNewData()
     {

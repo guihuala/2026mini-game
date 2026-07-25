@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using SimpleUITips;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -210,9 +209,6 @@ public class SettingsPanel : BasePanel
 
         // 2. 视觉反馈：重置 UI 状态到默认值
         OnResetButtonClick(); 
-        
-        // 3. 弹出一个飘字提示
-        UIHelper.Instance.ShowFixedText(FixedUIPosType.Center, "数据已清空", 1.5f);
     }
 
     private void OnBackButtonClick()

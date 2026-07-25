@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Scenes/PaperDiorama.unity
-    guid: 5e0f9cd78acf74fc69c0f557e6b7a6d4
+    path: Assets/Scenes/test_cjr.unity
+    guid: 1800bccf2cb7f6c40b0ccc0a63f3c5a3
+  - enabled: 1
+    path: Assets/Scenes/viewtest.unity
+    guid: 38844261137694892a745ef55cdd745c
   m_configObjects: {}
