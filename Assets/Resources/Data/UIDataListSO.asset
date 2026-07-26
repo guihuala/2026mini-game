@@ -21,3 +21,9 @@ MonoBehaviour:
     uiPath: Panel/ConfirmPanel
   - uiName: DialoguePanel
     uiPath: Panel/DialoguePanel
+  - uiName: LevelSelectPanel
+    uiPath: Panel/LevelSelectPanel
+  - uiName: HUDPanel
+    uiPath: Panel/HUDPanel
+  - uiName: GameResultPanel
+    uiPath: Panel/GameResultPanel

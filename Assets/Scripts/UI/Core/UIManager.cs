@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public enum UIPanelLayer
 {
@@ -31,7 +33,10 @@ public class UIManager : SingletonPersistent<UIManager>
         {
             if (_uiRoot == null)
             {
-                _uiRoot = GameObject.Find("Canvas").transform;
+                GameObject canvasObject = GameObject.Find("Canvas");
+                _uiRoot = canvasObject != null
+                    ? canvasObject.transform
+                    : CreateRuntimeUIRoot();
             }
             return _uiRoot;
         }
@@ -42,7 +47,43 @@ public class UIManager : SingletonPersistent<UIManager>
     protected override void Awake()
     {
         base.Awake();
+        if (Instance != this) return;
         InitDicts();
+    }
+
+    private Transform CreateRuntimeUIRoot()
+    {
+        GameObject root = new GameObject(
+            "RuntimeUICanvas",
+            typeof(RectTransform),
+            typeof(Canvas),
+            typeof(CanvasScaler),
+            typeof(GraphicRaycaster));
+
+        root.layer = LayerMask.NameToLayer("UI");
+
+        Canvas canvas = root.GetComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+
+        CanvasScaler scaler = root.GetComponent<CanvasScaler>();
+        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(1920f, 1080f);
+        scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+
+        DontDestroyOnLoad(root);
+        EnsureEventSystem();
+        return root.transform;
+    }
+
+    private void EnsureEventSystem()
+    {
+        if (EventSystem.current != null) return;
+
+        GameObject eventSystem = new GameObject(
+            "RuntimeEventSystem",
+            typeof(EventSystem),
+            typeof(StandaloneInputModule));
+        DontDestroyOnLoad(eventSystem);
     }
 
     // 初始化字典

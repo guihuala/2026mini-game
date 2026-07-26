@@ -12,6 +12,8 @@ public class SaveData
 
     public int coin;
     public int currentLevel;
+    public string currentLevelId;
+    public int highestCompletedLevel = -1;
     public List<string> unlockedLevels = new List<string>();
     public DialogueSaveData dialogue = new DialogueSaveData();
     public ExplorationSaveData exploration = new ExplorationSaveData();

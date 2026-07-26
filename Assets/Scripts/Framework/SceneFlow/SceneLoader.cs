@@ -46,6 +46,34 @@ public class SceneLoader : SingletonPersistent<SceneLoader>
         StartCoroutine(LoadSceneRoutine(sceneName, onComplete));
     }
 
+    public bool LoadLevel(string levelId, Action onComplete = null)
+    {
+        if (isLoading) return false;
+
+        LevelDefinition level = LevelProgress.Catalog != null ? LevelProgress.Catalog.Get(levelId) : null;
+        if (level == null || string.IsNullOrWhiteSpace(level.sceneName))
+        {
+            Debug.LogError($"关卡配置无效：{levelId}");
+            return false;
+        }
+
+        if (!LevelProgress.SelectLevel(levelId)) return false;
+        if (!Application.CanStreamedLevelBeLoaded(level.sceneName))
+        {
+            Debug.LogError($"关卡场景未加入 Build Settings：{level.sceneName}");
+            return false;
+        }
+
+        StartCoroutine(LoadSceneRoutine(level.sceneName, onComplete));
+        return true;
+    }
+
+    public bool LoadCurrentLevel(Action onComplete = null)
+    {
+        LevelDefinition level = LevelProgress.GetCurrentLevel();
+        return level != null && LoadLevel(level.id, onComplete);
+    }
+
     /// <summary>
     /// 重新加载当前场景
     /// </summary>

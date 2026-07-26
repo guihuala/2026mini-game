@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 1301348935869836599}
   - component: {fileID: 1301348935869840000}
   - component: {fileID: 1301348935869840100}
+  - component: {fileID: 1301348935869840200}
+  - component: {fileID: 1301348935869840300}
   m_Layer: 0
   m_Name: -----MANAGER-----
   m_TagString: Untagged
@@ -28,6 +30,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1033116973648035728}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -35,7 +38,6 @@ Transform:
   m_Children:
   - {fileID: 107080982426901403}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8829458373483164258
 MonoBehaviour:
@@ -47,8 +49,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f53a79462cadf4bc483c5e175985e31f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   bgmAudioInfoList: []
   sfxAudioInfoList: []
   mainVolume: 0
@@ -115,7 +117,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialoguePanelName: DialoguePanel
   panelLayer: 300
-  dialogueTableResourcePath: ConfigTables/DialogueTable
+--- !u!114 &1301348935869840200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1033116973648035728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6456fca7068e4a7a8fee04e61a784c3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  inputEnabled: 1
+  gameplayInputEnabled: 1
+  uiInputEnabled: 1
+  horizontalAxis: Horizontal
+  verticalAxis: Vertical
+  normalizeMoveInput: 1
+  switchVisionKeys: 09000000
+  pauseKeys: 1b000000
+  confirmKeys: 0d00000020000000
+  cancelKeys: 1b000000
+--- !u!114 &1301348935869840300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1033116973648035728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d30559bc90bef4ddf8b5d4420bb486e1, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
 --- !u!1 &6293896897445081069
 GameObject:
   m_ObjectHideFlags: 0
@@ -147,7 +182,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4606483721613371785}
-  m_RootOrder: -2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -225,7 +259,6 @@ RectTransform:
   - {fileID: 6075826920764197735}
   - {fileID: 7089224831847885700}
   m_Father: {fileID: 7420452093882002064}
-  m_RootOrder: -2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -303,7 +336,6 @@ RectTransform:
   m_Children:
   - {fileID: 4606483721613371785}
   m_Father: {fileID: 107080982426901403}
-  m_RootOrder: -2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -391,7 +423,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4606483721613371785}
-  m_RootOrder: -2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -427,7 +458,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 832d2d034b06d4766b887c9ed1161d0b, type: 3}
     m_FontSize: 48
     m_FontStyle: 0
     m_BestFit: 0
@@ -473,7 +504,6 @@ RectTransform:
   m_Children:
   - {fileID: 7420452093882002064}
   m_Father: {fileID: 1583018607385850401}
-  m_RootOrder: -2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

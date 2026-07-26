@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
+using VInspector;
 
 public class MonsterChase : MonoBehaviour
 {
@@ -10,10 +12,14 @@ public class MonsterChase : MonoBehaviour
     [SerializeField] private float repathCooldown = 0.5f;
 
     private Seeker seeker;
-    [SerializeField] Rigidbody2D rb;
+    private Rigidbody2D rb;
     private List<Vector3> waypoints = new List<Vector3>();
-    [SerializeField] int currentIndex;
+    private int currentIndex;
     private Coroutine chaseRoutine;
+    private Vector3 spawnPosition;
+    private bool caughtPlayer;
+
+    public bool IsPaused { get; private set; } = true;
 
     private void Awake()
     {
@@ -24,12 +30,77 @@ public class MonsterChase : MonoBehaviour
         rb.gravityScale = 0f;
         rb.sleepMode = RigidbodySleepMode2D.NeverSleep;
         rb.constraints = RigidbodyConstraints2D.None;
+
+        spawnPosition = transform.position;
+        
     }
 
     private void Start()
     {
+        RequestPath(target.position);
+    }
+
+    [Button("StartChase")]
+    public void StartChase()
+    {
+        if (!IsPaused) return;
+        IsPaused = false;
         if (target != null)
             chaseRoutine = StartCoroutine(ChaseLoop());
+    }
+    
+
+    [Button("Pause")]
+    public void Pause()
+    {
+        if (IsPaused) return;
+        IsPaused = true;
+
+        if (chaseRoutine != null)
+        {
+            StopCoroutine(chaseRoutine);
+            chaseRoutine = null;
+        }
+
+        rb.velocity = Vector2.zero;
+    }
+    
+    [Button("Resume")]
+    public void Resume()
+    {
+        if (!IsPaused) return;
+        IsPaused = false;
+
+        if (target != null)
+            chaseRoutine = StartCoroutine(ChaseLoop());
+    }
+
+    public void ResetToSpawn()
+    {
+        caughtPlayer = false;
+        IsPaused = true;
+        if (chaseRoutine != null)
+        {
+            StopCoroutine(chaseRoutine);
+            chaseRoutine = null;
+        }
+        rb.velocity = Vector2.zero;
+        transform.position = spawnPosition;
+        waypoints.Clear();
+        currentIndex = 0;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (caughtPlayer || !other.CompareTag("Player")) return;
+        if (GameManager.Instance == null ||
+            GameManager.Instance.CurrentState != GameManager.GameState.Playing) return;
+
+        caughtPlayer = true;
+        foreach (MonsterChase monster in FindObjectsOfType<MonsterChase>(true))
+            monster.Pause();
+
+        GameManager.Instance.EndGame();
     }
 
     private IEnumerator ChaseLoop()
@@ -83,11 +154,7 @@ public class MonsterChase : MonoBehaviour
         {
             Vector3 nowtarget = waypoints[currentIndex];
             Vector3 current = transform.position;
-            
-            current.z = 0;
-            nowtarget.z = 0;
-            
-            
+
             if (Vector2.Distance(nowtarget, current) < 0.1f)
             {
                 currentIndex++;
@@ -97,13 +164,9 @@ public class MonsterChase : MonoBehaviour
                 current = transform.position;
             }
 
-            current.z = 0;
-            nowtarget.z = 0;
-
             Vector3 nextPosition = Vector2.MoveTowards(current, nowtarget, speed * Time.fixedDeltaTime);
-            nextPosition.z = 0;
-            Debug.Log(nextPosition);
-            transform.position = nextPosition;
+           nextPosition.z = 0;
+           transform.position = nextPosition;
 
             yield return new WaitForFixedUpdate();
         }

@@ -14,9 +14,7 @@ public class InputManager : SingletonPersistent<InputManager>
     [SerializeField] private bool normalizeMoveInput = true;
 
     [Header("Default Keys")]
-    [SerializeField] private List<KeyCode> jumpKeys = new List<KeyCode> { KeyCode.Space };
-    [SerializeField] private List<KeyCode> attackKeys = new List<KeyCode> { KeyCode.Mouse0, KeyCode.J };
-    [SerializeField] private List<KeyCode> interactKeys = new List<KeyCode> { KeyCode.E, KeyCode.F };
+    [SerializeField] private List<KeyCode> switchVisionKeys = new List<KeyCode> { KeyCode.Tab };
     [SerializeField] private List<KeyCode> pauseKeys = new List<KeyCode> { KeyCode.Escape };
     [SerializeField] private List<KeyCode> confirmKeys = new List<KeyCode> { KeyCode.Return, KeyCode.Space };
     [SerializeField] private List<KeyCode> cancelKeys = new List<KeyCode> { KeyCode.Escape };
@@ -98,9 +96,7 @@ public class InputManager : SingletonPersistent<InputManager>
     public void RebuildKeyMap()
     {
         actionKeys.Clear();
-        actionKeys[InputActionType.Jump] = jumpKeys;
-        actionKeys[InputActionType.Attack] = attackKeys;
-        actionKeys[InputActionType.Interact] = interactKeys;
+        actionKeys[InputActionType.SwitchVision] = switchVisionKeys;
         actionKeys[InputActionType.Pause] = pauseKeys;
         actionKeys[InputActionType.Confirm] = confirmKeys;
         actionKeys[InputActionType.Cancel] = cancelKeys;
