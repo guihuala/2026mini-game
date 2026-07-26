@@ -68,11 +68,12 @@ public class GameManager : SingletonPersistent<GameManager>
 
         if (isLevel)
         {
-            HUDPanel.Show(UIManager.Instance.UIRoot);
+            if (!UIManager.Instance.IsPanelOpen("HUDPanel"))
+                UIManager.Instance.OpenPanel("HUDPanel", null, UIPanelLayer.Bottom);
         }
         else
         {
-            HUDPanel.Hide();
+            ClosePanelIfOpen("HUDPanel");
         }
     }
 
