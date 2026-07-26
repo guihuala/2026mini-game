@@ -8777,7 +8777,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ce4f269cefe7784e8bfd5a9fc44c6d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _miniSceneManager: {fileID: 0}
+  caughtImages:
+  - {fileID: 21300000, guid: 7555da54b417c4f6f8e50ec25ca73180, type: 3}
+  - {fileID: 21300000, guid: 4d6d7f73802e2494f94e84f35fded64c, type: 3}
+  caughtImageOverride: {fileID: 0}
 --- !u!114 &463618094
 MonoBehaviour:
   m_ObjectHideFlags: 0

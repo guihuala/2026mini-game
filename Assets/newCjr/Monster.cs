@@ -5,7 +5,9 @@ public class Monster : MonoBehaviour
 {
     
     private MonsterMovement movement;
-    [Tooltip("留空时使用 GameManager 上配置的默认抓捕大图。")]
+    [Tooltip("按顺序轮播。只配置一张时始终显示该图；留空时使用 GameManager 默认图片。")]
+    [SerializeField] private Sprite[] caughtImages;
+    [HideInInspector]
     [SerializeField] private Sprite caughtImageOverride;
     private bool hasCaughtPlayer;
 
@@ -43,6 +45,11 @@ public class Monster : MonoBehaviour
         foreach (MonsterMovement monster in FindObjectsOfType<MonsterMovement>(true))
             monster.Pause();
 
-        GameManager.Instance.PlayMonsterCaughtSequence(caughtImageOverride);
+        Sprite[] images = caughtImages != null && caughtImages.Length > 0
+            ? caughtImages
+            : caughtImageOverride != null
+                ? new[] { caughtImageOverride }
+                : null;
+        GameManager.Instance.PlayMonsterCaughtSequence(images);
     }
 }

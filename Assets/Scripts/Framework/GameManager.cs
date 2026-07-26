@@ -179,13 +179,16 @@ public class GameManager : SingletonPersistent<GameManager>
     /// 播放怪物抓捕演出，并在黑屏后重新加载当前关卡。
     /// 使用不受暂停影响的时间，因此 Time.timeScale 为 0 时仍可正常播放。
     /// </summary>
-    public void PlayMonsterCaughtSequence(Sprite imageOverride = null)
+    public void PlayMonsterCaughtSequence(Sprite[] imageOverrides = null)
     {
         if (isCaughtSequencePlaying) return;
-        StartCoroutine(MonsterCaughtRoutine(imageOverride != null ? imageOverride : monsterCaughtImage));
+        Sprite[] caughtSprites = HasUsableSprite(imageOverrides)
+            ? imageOverrides
+            : new[] { monsterCaughtImage };
+        StartCoroutine(MonsterCaughtRoutine(caughtSprites));
     }
 
-    private IEnumerator MonsterCaughtRoutine(Sprite caughtSprite)
+    private IEnumerator MonsterCaughtRoutine(Sprite[] caughtSprites)
     {
         isCaughtSequencePlaying = true;
         levelCompleted = false;
@@ -197,8 +200,9 @@ public class GameManager : SingletonPersistent<GameManager>
         EnsureCaughtOverlay();
         caughtOverlay.gameObject.SetActive(true);
         caughtOverlay.alpha = 1f;
-        caughtImageView.sprite = caughtSprite;
-        caughtImageView.enabled = caughtSprite != null;
+        int currentSpriteIndex = FindNextSpriteIndex(caughtSprites, -1);
+        caughtImageView.sprite = currentSpriteIndex >= 0 ? caughtSprites[currentSpriteIndex] : null;
+        caughtImageView.enabled = caughtImageView.sprite != null;
         caughtImageView.color = new Color(1f, 1f, 1f, 0f);
         caughtFlashView.color = new Color(1f, 1f, 1f, 0f);
         caughtBlackView.color = Color.black;
@@ -233,6 +237,13 @@ public class GameManager : SingletonPersistent<GameManager>
             caughtImageView.color = new Color(1f, 1f, 1f, 0.2f);
             caughtFlashView.color = new Color(1f, 1f, 1f, 0.28f);
             yield return new WaitForSecondsRealtime(caughtFlashInterval);
+
+            int nextSpriteIndex = FindNextSpriteIndex(caughtSprites, currentSpriteIndex);
+            if (nextSpriteIndex >= 0)
+            {
+                currentSpriteIndex = nextSpriteIndex;
+                caughtImageView.sprite = caughtSprites[currentSpriteIndex];
+            }
 
             caughtImageView.color = Color.white;
             caughtFlashView.color = Color.clear;
@@ -272,6 +283,29 @@ public class GameManager : SingletonPersistent<GameManager>
 
         caughtOverlay.gameObject.SetActive(false);
         isCaughtSequencePlaying = false;
+    }
+
+    private static bool HasUsableSprite(Sprite[] sprites)
+    {
+        if (sprites == null) return false;
+        foreach (Sprite sprite in sprites)
+        {
+            if (sprite != null) return true;
+        }
+        return false;
+    }
+
+    private static int FindNextSpriteIndex(Sprite[] sprites, int currentIndex)
+    {
+        if (sprites == null || sprites.Length == 0) return -1;
+
+        for (int offset = 1; offset <= sprites.Length; offset++)
+        {
+            int index = (currentIndex + offset) % sprites.Length;
+            if (sprites[index] != null) return index;
+        }
+
+        return -1;
     }
 
     private void EnsureCaughtOverlay()

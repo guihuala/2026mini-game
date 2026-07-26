@@ -49,8 +49,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f53a79462cadf4bc483c5e175985e31f, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   bgmAudioInfoList: []
   sfxAudioInfoList: []
   mainVolume: 0
@@ -68,8 +68,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7aed15215969e4fb988231169be94dab, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   uiDatas: {fileID: 11400000, guid: d27b068b7a6e046148fddcb963dd9acd, type: 2}
 --- !u!114 &1301348935869836599
 MonoBehaviour:
@@ -81,8 +81,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dd32de33389864f868f83afd19e2945c, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   loadingCanvas: {fileID: 7509096049014771781}
   progressBar: {fileID: 7620542058217064460}
   progressText: {fileID: 6647691013981921286}
@@ -152,11 +152,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monsterCaughtImage: {fileID: 21300000, guid: ccda32fd5f2a9455c88aecb3c4af0a3a, type: 3}
-  caughtBlackHoldDuration: 0.2
+  caughtBlackHoldDuration: 0.5
   caughtImageRevealDuration: 0.8
   caughtFlashCount: 3
   caughtFlashInterval: 0.12
-  caughtBlackFadeDuration: 0.35
+  caughtBlackFadeDuration: 1
 --- !u!1 &6293896897445081069
 GameObject:
   m_ObjectHideFlags: 0

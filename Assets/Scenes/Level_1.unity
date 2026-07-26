@@ -591,6 +591,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ce4f269cefe7784e8bfd5a9fc44c6d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  caughtImages:
+  - {fileID: 21300000, guid: ccda32fd5f2a9455c88aecb3c4af0a3a, type: 3}
   caughtImageOverride: {fileID: 0}
 --- !u!1 &432460295
 GameObject:
@@ -10214,6 +10216,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3189207199161648519, guid: e6ebfca1c16a54d59a3676eea0dc853a, type: 3}
+      propertyPath: m_Size.y
+      value: 0.9123179
+      objectReference: {fileID: 0}
+    - target: {fileID: 3189207199161648519, guid: e6ebfca1c16a54d59a3676eea0dc853a, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.13759106
+      objectReference: {fileID: 0}
     - target: {fileID: 7706965535038514598, guid: e6ebfca1c16a54d59a3676eea0dc853a, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.43
