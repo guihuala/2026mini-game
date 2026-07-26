@@ -57,7 +57,11 @@ public class InputManager : SingletonPersistent<InputManager>
         }
 
         RawMove = new Vector2(Input.GetAxisRaw(horizontalAxis), Input.GetAxisRaw(verticalAxis));
-        Move = normalizeMoveInput && RawMove.sqrMagnitude > 1f ? RawMove.normalized : RawMove;
+        Move = normalizeMoveInput
+            ? new Vector2(
+                Mathf.Clamp(RawMove.x, -1f, 1f),
+                Mathf.Clamp(RawMove.y, -1f, 1f))
+            : RawMove;
     }
 
     public bool GetActionDown(InputActionType action)
