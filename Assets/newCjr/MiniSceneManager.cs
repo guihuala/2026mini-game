@@ -74,7 +74,7 @@ public class MiniSceneManager : MonoBehaviour
          portal.ResetPortal();
 
       // 重置所有怪物
-      foreach (var monster in FindObjectsOfType<MonsterChase>(true))
+      foreach (var monster in FindObjectsOfType<MonsterMovement>(true))
          monster.ResetToSpawn();
 
       resetCoroutine = null;

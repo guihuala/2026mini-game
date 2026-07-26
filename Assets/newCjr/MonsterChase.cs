@@ -5,7 +5,7 @@ using UnityEngine;
 using Pathfinding;
 using VInspector;
 
-public class MonsterChase : MonoBehaviour
+public class MonsterChase : MonsterMovement
 {
     [SerializeField] private Transform target;
     [SerializeField] private float speed = 2f;
@@ -18,8 +18,9 @@ public class MonsterChase : MonoBehaviour
     private Coroutine chaseRoutine;
     private Vector3 spawnPosition;
     private bool caughtPlayer;
+    private bool isPaused = true;
 
-    public bool IsPaused { get; private set; } = true;
+    public override bool IsPaused => isPaused;
 
     private void Awake()
     {
@@ -37,24 +38,30 @@ public class MonsterChase : MonoBehaviour
 
     private void Start()
     {
-        RequestPath(target.position);
+        if (target != null)
+            RequestPath(target.position);
     }
 
     [Button("StartChase")]
     public void StartChase()
     {
+        StartMoving();
+    }
+
+    public override void StartMoving()
+    {
         if (!IsPaused) return;
-        IsPaused = false;
+        isPaused = false;
         if (target != null)
             chaseRoutine = StartCoroutine(ChaseLoop());
     }
     
 
     [Button("Pause")]
-    public void Pause()
+    public override void Pause()
     {
         if (IsPaused) return;
-        IsPaused = true;
+        isPaused = true;
 
         if (chaseRoutine != null)
         {
@@ -66,19 +73,19 @@ public class MonsterChase : MonoBehaviour
     }
     
     [Button("Resume")]
-    public void Resume()
+    public override void Resume()
     {
         if (!IsPaused) return;
-        IsPaused = false;
+        isPaused = false;
 
         if (target != null)
             chaseRoutine = StartCoroutine(ChaseLoop());
     }
 
-    public void ResetToSpawn()
+    public override void ResetToSpawn()
     {
         caughtPlayer = false;
-        IsPaused = true;
+        isPaused = true;
         if (chaseRoutine != null)
         {
             StopCoroutine(chaseRoutine);
@@ -97,7 +104,7 @@ public class MonsterChase : MonoBehaviour
             GameManager.Instance.CurrentState != GameManager.GameState.Playing) return;
 
         caughtPlayer = true;
-        foreach (MonsterChase monster in FindObjectsOfType<MonsterChase>(true))
+        foreach (MonsterMovement monster in FindObjectsOfType<MonsterMovement>(true))
             monster.Pause();
 
         GameManager.Instance.EndGame();

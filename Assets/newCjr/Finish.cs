@@ -21,7 +21,7 @@ public class Finish : MonoBehaviour
         if (triggered) return;
         triggered = true;
 
-        foreach (var monster in FindObjectsOfType<MonsterChase>(true))
+        foreach (var monster in FindObjectsOfType<MonsterMovement>(true))
             monster.Pause();
 
         if (GameManager.Instance != null)

@@ -4,11 +4,11 @@ using UnityEngine;
 public class Monster : MonoBehaviour
 {
     
-    [SerializeField] MonsterChase msChase;
+    private MonsterMovement movement;
     [SerializeField] private MiniSceneManager _miniSceneManager;
     private void Awake()
     {
-        msChase = GetComponent<MonsterChase>();
+        movement = GetComponent<MonsterMovement>();
         _miniSceneManager = Uitiles_test.Find<MiniSceneManager>();
         GetComponent<Rigidbody2D>().gravityScale = 0f;
     }
@@ -32,7 +32,8 @@ public class Monster : MonoBehaviour
     private void OnTouchPlayer()
     {
         Debug.Log($"怪物 {name} 碰到了玩家！");
-        msChase.Pause();
+        if (movement != null)
+            movement.Pause();
         _miniSceneManager.ResetPlayerPos();
         
     }
