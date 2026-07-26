@@ -1,29 +1,52 @@
-# 钥匙与门配置指南
+# 钥匙与门系统
 
-钥匙本质是字符串，存在 Player 的 `PlayerKeyInventory` 里，不是场景里的物理物体。
+## 脚本关系
 
-## 玩家配置
+```
+Key (Trigger) ──拾取──→ PlayerKeyInventory (背包) ──开门──→ Door (碰撞体)
+                              ↑
+                    MiniSceneManager (管理重置)
+```
 
-Player GameObject 挂载 `PlayerKeyInventory` 脚本，通过以下方式获得钥匙：
+## Player 配置
 
-- **代码**：`GetComponent<PlayerKeyInventory>().AddKey("red")`
-- **调试按钮**：Inspector 里用 `Add Key (Debug)` 直接添加
+挂载 `PlayerKeyInventory`：
+- Inspector 可见当前钥匙列表
+- `Add Key (Debug)` 按钮可调试添加钥匙
+- 代码添加：`GetComponent<PlayerKeyInventory>().AddKey("red")`
 
-## 门配置
+## Key（钥匙）配置
 
-1. 创建门 GameObject，挂 Collider2D（勾选 **Is Trigger**）
-2. 挂载 `Door` 脚本
-3. 填写 **Key Id**，如 `red`
+| 步骤 | 说明 |
+|------|------|
+| 1 | 创建钥匙 GameObject |
+| 2 | 挂 Collider2D（脚本自动设为 Is Trigger） |
+| 3 | 挂 `Key` 脚本，填 **Key Id**（如 `red`） |
 
-## 流程
+**效果**：玩家碰到钥匙 → 钥匙字符串存入背包 → 钥匙物体隐藏
 
-玩家带着 Collider 碰到门 → Door 遍历 `PlayerKeyInventory` → 匹配 `Key Id` → 钥匙被消耗，门 Collider 关闭（门消失）
+## Door（门）配置
+
+| 步骤 | 说明 |
+|------|------|
+| 1 | 创建门 GameObject |
+| 2 | 挂 Collider2D（**不要**勾选 Is Trigger，门需要阻挡玩家） |
+| 3 | 挂 `Door` 脚本，填与对应钥匙相同的 **Key Id** |
+
+**效果**：玩家带着匹配钥匙碰到门 → 钥匙消耗 → 门隐藏
+
+## 死亡重置
+
+`MiniSceneManager` 在 Start 搜集场景所有 Key 和 Door。
+玩家死亡重置时：
+1. 清空玩家背包
+2. 所有 Key 和 Door 恢复显示（`SetActive(true)`）
 
 ## 示例
 
-| 钥匙来源 | Key Id | 对应门 |
-|----------|--------|--------|
-| 对话获得 | `red` | 红色门填 `red` |
-| 任务奖励 | `boss` | Boss 门填 `boss` |
+| Key Id | 钥匙 | 门 |
+|--------|------|-----|
+| `red_key` | 红色钥匙挂在墙边 | 红色门挡住通道 |
+| `boss_key` | Boss 钥匙在角落里 | Boss 房间入口门 |
 
-一对钥匙和门只要 **Key Id 完全一致** 即可配对。
+> **配对规则**：Key.Id = Door.Id，字符串完全一致即可解锁。
