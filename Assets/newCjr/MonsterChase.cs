@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,8 +16,9 @@ public class MonsterChase : MonoBehaviour
     private List<Vector3> waypoints = new List<Vector3>();
     private int currentIndex;
     private Coroutine chaseRoutine;
+    private Vector3 spawnPosition;
 
-    public bool IsPaused { get; private set; }
+    public bool IsPaused { get; private set; } = true;
 
     private void Awake()
     {
@@ -27,11 +29,21 @@ public class MonsterChase : MonoBehaviour
         rb.gravityScale = 0f;
         rb.sleepMode = RigidbodySleepMode2D.NeverSleep;
         rb.constraints = RigidbodyConstraints2D.None;
+
+        spawnPosition = transform.position;
+        
     }
-    
+
+    private void Start()
+    {
+        RequestPath(target.position);
+    }
+
     [Button("StartChase")]
     public void StartChase()
     {
+        if (!IsPaused) return;
+        IsPaused = false;
         if (target != null)
             chaseRoutine = StartCoroutine(ChaseLoop());
     }
@@ -60,6 +72,20 @@ public class MonsterChase : MonoBehaviour
 
         if (target != null)
             chaseRoutine = StartCoroutine(ChaseLoop());
+    }
+
+    public void ResetToSpawn()
+    {
+        IsPaused = true;
+        if (chaseRoutine != null)
+        {
+            StopCoroutine(chaseRoutine);
+            chaseRoutine = null;
+        }
+        rb.velocity = Vector2.zero;
+        transform.position = spawnPosition;
+        waypoints.Clear();
+        currentIndex = 0;
     }
 
     private IEnumerator ChaseLoop()

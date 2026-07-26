@@ -65,6 +65,10 @@ public class MiniSceneManager : MonoBehaviour
       foreach (var door in allDoors)
          door.SetActive(true);
 
+      // 重置所有怪物
+      foreach (var monster in FindObjectsOfType<MonsterChase>(true))
+         monster.ResetToSpawn();
+
       resetCoroutine = null;
    }
 }

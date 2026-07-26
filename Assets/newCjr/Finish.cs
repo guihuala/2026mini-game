@@ -14,9 +14,14 @@ public class Finish : MonoBehaviour
         OnPlayerReachFinish();
     }
 
+    private bool triggered;
+
     private void OnPlayerReachFinish()
     {
-        foreach (var monster in FindObjectsOfType<MonsterChase>())
+        if (triggered) return;
+        triggered = true;
+
+        foreach (var monster in FindObjectsOfType<MonsterChase>(true))
             monster.Pause();
     }
 }
