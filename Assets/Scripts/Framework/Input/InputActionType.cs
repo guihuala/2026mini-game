@@ -1,9 +1,7 @@
 public enum InputActionType
 {
-    Jump,
-    Attack,
-    Interact,
-    Pause,
-    Confirm,
-    Cancel
+    Pause = 3,
+    Confirm = 4,
+    Cancel = 5,
+    SwitchVision = 6
 }

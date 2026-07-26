@@ -22,9 +22,16 @@ public class PlayerMove : MonoBehaviour
     {
         if (!canMove) return;
 
-        moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        if (moveInput.sqrMagnitude > 1f)
-            moveInput.Normalize();
+        if (InputManager.Instance != null)
+        {
+            moveInput = InputManager.Instance.Move;
+        }
+        else
+        {
+            moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            if (moveInput.sqrMagnitude > 1f)
+                moveInput.Normalize();
+        }
     }
 
     private void FixedUpdate()

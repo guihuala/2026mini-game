@@ -135,9 +135,7 @@ MonoBehaviour:
   horizontalAxis: Horizontal
   verticalAxis: Vertical
   normalizeMoveInput: 1
-  jumpKeys: 20000000
-  attackKeys: 323000000006a000
-  interactKeys: 6500000066000000
+  switchVisionKeys: 09000000
   pauseKeys: 1b000000
   confirmKeys: 0d00000020000000
   cancelKeys: 1b000000

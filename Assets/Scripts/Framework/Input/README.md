@@ -15,9 +15,7 @@ Vector2 move = InputManager.Instance.Move;
 Vector2 rawMove = InputManager.Instance.RawMove;
 Vector2 mousePos = InputManager.Instance.MousePosition;
 
-bool interactDown = InputManager.Instance.GetActionDown(InputActionType.Interact);
-bool attacking = InputManager.Instance.GetAction(InputActionType.Attack);
-bool jumpUp = InputManager.Instance.GetActionUp(InputActionType.Jump);
+bool switchVision = InputManager.Instance.GetActionDown(InputActionType.SwitchVision);
 ```
 
 ## 输入开关
@@ -31,10 +29,10 @@ InputManager.Instance.SetUIInputEnabled(true);
 ## 修改键位
 
 ```csharp
-InputManager.Instance.SetKeys(InputActionType.Interact, new[] { KeyCode.E });
+// 默认使用 Tab 切换视野；可在 InputManager Inspector 的
+// Switch Vision Keys 中调整绑定。
 ```
 
 ## 设计说明
 
 `InputManager` 只负责读取输入，不直接调用 `GameManager`、`UIManager` 或玩家控制器。这样项目可以按需选择使用，也方便以后把内部实现替换成 Unity New Input System。
-
