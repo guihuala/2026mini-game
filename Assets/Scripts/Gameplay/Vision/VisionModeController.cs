@@ -17,6 +17,16 @@ public class VisionModeController : MonoBehaviour
     [Tooltip("Automatically treats every Portal in the scene as a red-vision interactable.")]
     [SerializeField] private bool includePortalsAsRedInteractables = true;
 
+    [Header("Blue Vision Range")]
+    [Tooltip("Maximum sight distance in Unity world units.")]
+    [SerializeField, Min(0.1f)] private float blueViewDistance = 8f;
+    [Tooltip("Width of the sight cone in degrees.")]
+    [SerializeField, Range(1f, 360f)] private float blueViewAngle = 90f;
+    [Tooltip("More rays produce smoother wall edges but cost more physics queries.")]
+    [SerializeField, Range(8, 360)] private int blueViewRayCount = 121;
+    [Tooltip("Collider layers that block blue vision.")]
+    [SerializeField] private LayerMask blueVisionWallLayers = ~0;
+
     [Header("Initial State")]
     [SerializeField] private VisionMode initialMode = VisionMode.Blue;
 
@@ -38,7 +48,12 @@ public class VisionModeController : MonoBehaviour
         blueVisionExploration = GetComponent<BlueVisionExploration>();
         if (blueVisionExploration == null)
             blueVisionExploration = gameObject.AddComponent<BlueVisionExploration>();
-        blueVisionExploration.Initialize(mapRenderers);
+        blueVisionExploration.Initialize(
+            mapRenderers,
+            blueViewDistance,
+            blueViewAngle,
+            blueViewRayCount,
+            blueVisionWallLayers);
 
         SetVision(initialMode, false);
     }

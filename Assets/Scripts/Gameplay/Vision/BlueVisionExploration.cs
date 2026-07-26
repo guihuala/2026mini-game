@@ -27,9 +27,18 @@ public class BlueVisionExploration : MonoBehaviour
     private Bounds mapBounds;
     private bool initialized;
 
-    public void Initialize(Renderer[] renderers)
+    public void Initialize(
+        Renderer[] renderers,
+        float distance,
+        float angle,
+        int rays,
+        LayerMask blockingLayers)
     {
         mapRenderers = renderers;
+        viewDistance = Mathf.Max(0.1f, distance);
+        viewAngle = Mathf.Clamp(angle, 1f, 360f);
+        rayCount = Mathf.Clamp(rays, 8, 360);
+        wallLayers = blockingLayers;
         GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
         player = playerObject != null ? playerObject.transform : null;
         playerBody = playerObject != null ? playerObject.GetComponent<Rigidbody2D>() : null;
