@@ -5,11 +5,13 @@ public class Monster : MonoBehaviour
 {
     
     private MonsterMovement movement;
-    [SerializeField] private MiniSceneManager _miniSceneManager;
+    [Tooltip("留空时使用 GameManager 上配置的默认抓捕大图。")]
+    [SerializeField] private Sprite caughtImageOverride;
+    private bool hasCaughtPlayer;
+
     private void Awake()
     {
         movement = GetComponent<MonsterMovement>();
-        _miniSceneManager = Uitiles_test.Find<MiniSceneManager>();
         GetComponent<Rigidbody2D>().gravityScale = 0f;
     }
 
@@ -31,10 +33,16 @@ public class Monster : MonoBehaviour
 
     private void OnTouchPlayer()
     {
+        if (hasCaughtPlayer) return;
+        if (GameManager.Instance == null ||
+            GameManager.Instance.CurrentState != GameManager.GameState.Playing) return;
+
+        hasCaughtPlayer = true;
         Debug.Log($"怪物 {name} 碰到了玩家！");
-        if (movement != null)
-            movement.Pause();
-        _miniSceneManager.ResetPlayerPos();
-        
+
+        foreach (MonsterMovement monster in FindObjectsOfType<MonsterMovement>(true))
+            monster.Pause();
+
+        GameManager.Instance.PlayMonsterCaughtSequence(caughtImageOverride);
     }
 }

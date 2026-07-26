@@ -17,7 +17,6 @@ public class MonsterChase : MonsterMovement
     private int currentIndex;
     private Coroutine chaseRoutine;
     private Vector3 spawnPosition;
-    private bool caughtPlayer;
     private bool isPaused = true;
 
     public override bool IsPaused => isPaused;
@@ -84,7 +83,6 @@ public class MonsterChase : MonsterMovement
 
     public override void ResetToSpawn()
     {
-        caughtPlayer = false;
         isPaused = true;
         if (chaseRoutine != null)
         {
@@ -95,19 +93,6 @@ public class MonsterChase : MonsterMovement
         transform.position = spawnPosition;
         waypoints.Clear();
         currentIndex = 0;
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (caughtPlayer || !other.CompareTag("Player")) return;
-        if (GameManager.Instance == null ||
-            GameManager.Instance.CurrentState != GameManager.GameState.Playing) return;
-
-        caughtPlayer = true;
-        foreach (MonsterMovement monster in FindObjectsOfType<MonsterMovement>(true))
-            monster.Pause();
-
-        GameManager.Instance.EndGame();
     }
 
     private IEnumerator ChaseLoop()
