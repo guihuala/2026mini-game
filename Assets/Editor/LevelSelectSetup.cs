@@ -14,6 +14,7 @@ public static class LevelSelectSetup
     {
         BuildCatalog();
         BuildPanel();
+        BuildHud();
         RegisterPanel();
         UpdateMainMenu();
         UpdateBuildScenes();
@@ -135,7 +136,41 @@ public static class LevelSelectSetup
         if (data.uiDataList == null) data.uiDataList = new List<UIData>();
         if (!data.uiDataList.Exists(entry => entry.uiName == "LevelSelectPanel"))
             data.uiDataList.Add(new UIData { uiName = "LevelSelectPanel", uiPath = "Panel/LevelSelectPanel" });
+        if (!data.uiDataList.Exists(entry => entry.uiName == "HUDPanel"))
+            data.uiDataList.Add(new UIData { uiName = "HUDPanel", uiPath = "Panel/HUDPanel" });
         EditorUtility.SetDirty(data);
+    }
+
+    private static void BuildHud()
+    {
+        Font font = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
+        GameObject root = UIObject("HUDPanel", null);
+        Stretch(root.GetComponent<RectTransform>());
+        root.AddComponent<CanvasGroup>();
+        HUDPanel panel = root.AddComponent<HUDPanel>();
+
+        GameObject content = UIObject("Content", root.transform);
+        Stretch(content.GetComponent<RectTransform>());
+
+        Text levelName = TextObject("LevelName", content.transform, font, "第一关", 26, TextAnchor.MiddleLeft);
+        levelName.color = new Color(0.95f, 0.93f, 0.82f);
+        SetRect(levelName.rectTransform, new Vector2(0.035f, 0.89f), new Vector2(0.35f, 0.97f));
+
+        Button pause = ButtonObject("PauseButton", content.transform, font, "暂停  ESC");
+        pause.GetComponent<Image>().color = new Color(0.08f, 0.12f, 0.14f, 0.88f);
+        SetRect(pause.GetComponent<RectTransform>(), new Vector2(0.83f, 0.89f), new Vector2(0.965f, 0.97f));
+
+        SerializedObject so = new SerializedObject(panel);
+        so.FindProperty("pauseButton").objectReferenceValue = pause;
+        so.FindProperty("levelNameText").objectReferenceValue = levelName;
+        so.FindProperty("animationContent").objectReferenceValue = content.GetComponent<RectTransform>();
+        so.FindProperty("scaleAnimation").boolValue = false;
+        so.FindProperty("fadeInDuration").floatValue = 0.15f;
+        so.FindProperty("fadeOutDuration").floatValue = 0.15f;
+        so.ApplyModifiedPropertiesWithoutUndo();
+
+        PrefabUtility.SaveAsPrefabAsset(root, "Assets/Resources/Panel/HUDPanel.prefab");
+        Object.DestroyImmediate(root);
     }
 
     private static void UpdateMainMenu()

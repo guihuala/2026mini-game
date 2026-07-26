@@ -23,3 +23,5 @@ MonoBehaviour:
     uiPath: Panel/DialoguePanel
   - uiName: LevelSelectPanel
     uiPath: Panel/LevelSelectPanel
+  - uiName: HUDPanel
+    uiPath: Panel/HUDPanel
