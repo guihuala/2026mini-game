@@ -1,50 +1,22 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SettingsPanel : BasePanel
 {
-    private enum SettingsTab
-    {
-        Audio,
-        Video
-    }
-
-    [Header("页签")]
-    [SerializeField] private Button audioTabButton;
-    [SerializeField] private Button videoTabButton;
-    [SerializeField] private Button inputTabButton;
-    [SerializeField] private GameObject audioPage;
-    [SerializeField] private GameObject videoPage;
-    [SerializeField] private GameObject inputPage;
-
     [Header("通用组件 - 音频")]
     public Slider bgmVolumeSlider;
     public Slider sfxVolumeSlider;
-
-    [Header("通用组件 - 视频")]
-    public Dropdown resolutionDropdown;
-    public Toggle fullscreenToggle;
-    public Button chineseLanguageButton;
-    public Button englishLanguageButton;
 
     [Header("通用组件 - 数据")]
     public Button clearDataButton;
 
     [Header("按钮")]
-    public Button backButton;     
-    public Button resetButton;    
-    
-    private Resolution[] _resolutions; // 缓存系统支持的分辨率列表
+    public Button backButton;
+
     private void Start()
     {
-        InitTabs();
         InitAudioSettings();
-        InitVideoSettings();
-        HideUnusedLanguageControls();
         InitButtons();
-        HideUnusedInputControls();
-        ShowTab(SettingsTab.Audio);
     }
     
     private void InitAudioSettings()
@@ -56,119 +28,11 @@ public class SettingsPanel : BasePanel
         sfxVolumeSlider.onValueChanged.AddListener(ChangeSfxVolume);
     }
 
-    // 初始化视频设置逻辑
-    private void InitVideoSettings()
-    {
-        // 1. 设置全屏 Toggle 状态
-        if (fullscreenToggle != null)
-        {
-            fullscreenToggle.isOn = Screen.fullScreen;
-            fullscreenToggle.onValueChanged.AddListener(SetFullscreen);
-        }
-
-        // 2. 设置分辨率 Dropdown
-        if (resolutionDropdown != null)
-        {
-            _resolutions = Screen.resolutions;
-            resolutionDropdown.ClearOptions();
-
-            List<string> options = new List<string>();
-            int currentResolutionIndex = 0;
-
-            for (int i = 0; i < _resolutions.Length; i++)
-            {
-                // 构建显示的字符串，例如 "1920 x 1080"
-                string option = _resolutions[i].width + " x " + _resolutions[i].height + " @" + _resolutions[i].refreshRate + "Hz";
-                options.Add(option);
-
-                // 找到当前屏幕分辨率对应的索引，以便默认选中
-                if (_resolutions[i].width == Screen.width &&
-                    _resolutions[i].height == Screen.height)
-                {
-                    currentResolutionIndex = i;
-                }
-            }
-
-            resolutionDropdown.AddOptions(options);
-            resolutionDropdown.value = currentResolutionIndex;
-            resolutionDropdown.RefreshShownValue();
-
-            resolutionDropdown.onValueChanged.AddListener(SetResolution);
-        }
-    }
-
     private void InitButtons()
     {
         if(backButton) backButton.onClick.AddListener(OnBackButtonClick);
-        if(resetButton) resetButton.onClick.AddListener(OnResetButtonClick);
-        
         if(clearDataButton) clearDataButton.onClick.AddListener(OnClearDataClick);
     }
-
-    private void HideUnusedLanguageControls()
-    {
-        if (chineseLanguageButton != null && englishLanguageButton != null)
-        {
-            Transform commonParent = chineseLanguageButton.transform.parent;
-            if (commonParent == englishLanguageButton.transform.parent)
-                commonParent.gameObject.SetActive(false);
-            else
-            {
-                chineseLanguageButton.gameObject.SetActive(false);
-                englishLanguageButton.gameObject.SetActive(false);
-            }
-        }
-    }
-
-    private void InitTabs()
-    {
-        if (audioTabButton) audioTabButton.onClick.AddListener(() => ShowTab(SettingsTab.Audio));
-        if (videoTabButton) videoTabButton.onClick.AddListener(() => ShowTab(SettingsTab.Video));
-    }
-
-    private void HideUnusedInputControls()
-    {
-        if (inputTabButton != null) inputTabButton.gameObject.SetActive(false);
-        if (inputPage != null) inputPage.SetActive(false);
-    }
-
-    private void ShowTab(SettingsTab tab)
-    {
-        if (audioPage != null) audioPage.SetActive(tab == SettingsTab.Audio);
-        if (videoPage != null) videoPage.SetActive(tab == SettingsTab.Video);
-
-        SetTabInteractable(audioTabButton, tab != SettingsTab.Audio);
-        SetTabInteractable(videoTabButton, tab != SettingsTab.Video);
-    }
-
-    private void SetTabInteractable(Button button, bool interactable)
-    {
-        if (button != null)
-        {
-            button.interactable = interactable;
-        }
-    }
-
-    #region 视频控制
-
-    public void SetResolution(int resolutionIndex)
-    {
-        if (_resolutions == null || resolutionIndex >= _resolutions.Length) return;
-        
-        Resolution resolution = _resolutions[resolutionIndex];
-        // 设置分辨率，第三个参数为是否全屏
-        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
-        
-        Debug.Log($"分辨率设置为: {resolution.width} x {resolution.height}");
-    }
-
-    public void SetFullscreen(bool isFullscreen)
-    {
-        Screen.fullScreen = isFullscreen;
-        Debug.Log($"全屏状态: {isFullscreen}");
-    }
-
-    #endregion
 
     #region 音量控制
 
@@ -187,10 +51,7 @@ public class SettingsPanel : BasePanel
         PlayerPrefs.SetFloat("MainVolume", AudioManager.Instance.mainVolume);
         PlayerPrefs.SetFloat("BgmVolumeFactor", AudioManager.Instance.bgmVolumeFactor);
         PlayerPrefs.SetFloat("SfxVolumeFactor", AudioManager.Instance.sfxVolumeFactor);
-        
-        // 注意：分辨率和全屏状态 Unity 会自动保存（在 Windows 注册表中），
-        // 但如果需要跨设备同步，你也可以在这里手动保存分辨率 Index。
-        
+
         PlayerPrefs.Save();
         Debug.Log("Settings Saved!");
     }
@@ -207,8 +68,8 @@ public class SettingsPanel : BasePanel
         
         Debug.Log("所有存档数据已清空！");
 
-        // 2. 视觉反馈：重置 UI 状态到默认值
-        OnResetButtonClick(); 
+        // 2. 同步音量和 UI 到默认状态
+        ApplyDefaultAudioSettings();
     }
 
     private void OnBackButtonClick()
@@ -217,13 +78,11 @@ public class SettingsPanel : BasePanel
         UIManager.Instance.ClosePanel(panelName);
     }
 
-    private void OnResetButtonClick()
+    private void ApplyDefaultAudioSettings()
     {
-        // 重置 UI 显示
         bgmVolumeSlider.value = 0.8f;
         sfxVolumeSlider.value = 0.8f;
 
-        // 应用到底层逻辑
         AudioManager.Instance.ChangeMainVolume(1f);
         ChangeBgmVolume(0.8f);
         ChangeSfxVolume(0.8f);

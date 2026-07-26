@@ -31,8 +31,15 @@ public class VisionModeController : MonoBehaviour
 
     public event Action<VisionMode> VisionChanged;
 
+    private BlueVisionExploration blueVisionExploration;
+
     private void Start()
     {
+        blueVisionExploration = GetComponent<BlueVisionExploration>();
+        if (blueVisionExploration == null)
+            blueVisionExploration = gameObject.AddComponent<BlueVisionExploration>();
+        blueVisionExploration.Initialize(mapRenderers);
+
         SetVision(initialMode, false);
     }
 
@@ -86,6 +93,9 @@ public class VisionModeController : MonoBehaviour
         CurrentMode = mode;
 
         bool blueActive = mode == VisionMode.Blue;
+        if (blueVisionExploration != null)
+            blueVisionExploration.enabled = blueActive;
+
         for (int i = 0; i < mapRenderers.Length; i++)
         {
             if (mapRenderers[i] != null)
