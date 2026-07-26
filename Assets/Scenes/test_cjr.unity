@@ -746,8 +746,8 @@ Transform:
   m_GameObject: {fileID: 432460295}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.5172148, y: 6.061803, z: -0.07988469}
-  m_LocalScale: {x: 1, y: 2.0549886, z: 1}
+  m_LocalPosition: {x: -2.2385, y: 3.31, z: -0.07988469}
+  m_LocalScale: {x: 1.7229, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 781884864}
@@ -3606,13 +3606,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8e67e08fa64941bbba2a20836cda7927, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   mapRenderers:
   - {fileID: 617925725}
   interactableObjects:
   - {fileID: 1941656932}
   - {fileID: 798440013}
+  includePortalsAsRedInteractables: 1
   initialMode: 0
   blueTint: {r: 0.05, g: 0.3, b: 1, a: 0.12}
   redTint: {r: 1, g: 0.05, b: 0.05, a: 0.16}
@@ -3621,6 +3622,7 @@ MonoBehaviour:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1537879132}
   - {fileID: 489685643}
   - {fileID: 507144573}
   - {fileID: 1941869867}
@@ -3629,5 +3631,4 @@ SceneRoots:
   - {fileID: 1941656933}
   - {fileID: 94533280}
   - {fileID: 202802180}
-  - {fileID: 1537879132}
   - {fileID: 2100000001}

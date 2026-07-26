@@ -11,6 +11,7 @@ public class MiniSceneManager : MonoBehaviour
    private PlayerKeyInventory playerInventory;
    private List<GameObject> allKeys = new List<GameObject>();
    private List<GameObject> allDoors = new List<GameObject>();
+   private List<Portal> allPortals = new List<Portal>();
 
    private void Start()
    {
@@ -21,6 +22,9 @@ public class MiniSceneManager : MonoBehaviour
 
       foreach (var door in FindObjectsOfType<Door>(true))
          allDoors.Add(door.gameObject);
+
+      foreach (var portal in FindObjectsOfType<Portal>(true))
+         allPortals.Add(portal);
    }
 
    Coroutine resetCoroutine;
@@ -64,6 +68,10 @@ public class MiniSceneManager : MonoBehaviour
 
       foreach (var door in allDoors)
          door.SetActive(true);
+
+      // 清除传送冷却，恢复传送门的初始可用状态。
+      foreach (var portal in allPortals)
+         portal.ResetPortal();
 
       // 重置所有怪物
       foreach (var monster in FindObjectsOfType<MonsterChase>(true))

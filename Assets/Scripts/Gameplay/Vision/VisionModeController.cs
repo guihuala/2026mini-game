@@ -14,6 +14,8 @@ public class VisionModeController : MonoBehaviour
     [SerializeField] private Renderer[] mapRenderers;
     [Tooltip("These objects are visible and interactive only in red vision.")]
     [SerializeField] private GameObject[] interactableObjects;
+    [Tooltip("Automatically treats every Portal in the scene as a red-vision interactable.")]
+    [SerializeField] private bool includePortalsAsRedInteractables = true;
 
     [Header("Initial State")]
     [SerializeField] private VisionMode initialMode = VisionMode.Blue;
@@ -95,6 +97,16 @@ public class VisionModeController : MonoBehaviour
         {
             if (interactableObjects[i] != null)
                 interactableObjects[i].SetActive(redActive);
+        }
+
+        if (includePortalsAsRedInteractables)
+        {
+            Portal[] portals = FindObjectsOfType<Portal>(true);
+            for (int i = 0; i < portals.Length; i++)
+            {
+                if (portals[i] != null)
+                    portals[i].gameObject.SetActive(redActive);
+            }
         }
 
         if (notify)
