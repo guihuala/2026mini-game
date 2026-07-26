@@ -11,6 +11,7 @@ public class GameManager : SingletonPersistent<GameManager>
     }
 
     private GameState currentState;
+    private bool levelCompleted;
     public GameState CurrentState => currentState;
     public bool IsPaused => currentState == GameState.Paused;
 
@@ -44,6 +45,7 @@ public class GameManager : SingletonPersistent<GameManager>
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        levelCompleted = false;
         SetGameState(GameState.Playing);
         RefreshHud(scene);
     }
@@ -97,7 +99,12 @@ public class GameManager : SingletonPersistent<GameManager>
 
             case GameState.GameOver:
                 SetPaused(true);
-                if (UIManager.Instance != null) UIManager.Instance.OpenPanel("GameResultPanel");
+                if (UIManager.Instance != null)
+                {
+                    GameResultPanel resultPanel =
+                        UIManager.Instance.OpenPanel("GameResultPanel", null, UIPanelLayer.Top) as GameResultPanel;
+                    if (resultPanel != null) resultPanel.Configure(levelCompleted);
+                }
                 break;
         }
     }
@@ -137,11 +144,13 @@ public class GameManager : SingletonPersistent<GameManager>
     // 游戏结束
     public void EndGame()
     {
+        levelCompleted = false;
         SetGameState(GameState.GameOver);
     }
 
     public void CompleteLevel()
     {
+        levelCompleted = true;
         LevelProgress.CompleteCurrentLevel();
         SetGameState(GameState.GameOver);
     }

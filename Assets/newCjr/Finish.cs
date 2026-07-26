@@ -23,5 +23,14 @@ public class Finish : MonoBehaviour
 
         foreach (var monster in FindObjectsOfType<MonsterChase>(true))
             monster.Pause();
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.CompleteLevel();
+        }
+        else
+        {
+            Debug.LogError("到达终点时未找到 GameManager，无法完成关卡。", this);
+        }
     }
 }

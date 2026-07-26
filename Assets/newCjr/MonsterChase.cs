@@ -17,6 +17,7 @@ public class MonsterChase : MonoBehaviour
     private int currentIndex;
     private Coroutine chaseRoutine;
     private Vector3 spawnPosition;
+    private bool caughtPlayer;
 
     public bool IsPaused { get; private set; } = true;
 
@@ -76,6 +77,7 @@ public class MonsterChase : MonoBehaviour
 
     public void ResetToSpawn()
     {
+        caughtPlayer = false;
         IsPaused = true;
         if (chaseRoutine != null)
         {
@@ -86,6 +88,19 @@ public class MonsterChase : MonoBehaviour
         transform.position = spawnPosition;
         waypoints.Clear();
         currentIndex = 0;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (caughtPlayer || !other.CompareTag("Player")) return;
+        if (GameManager.Instance == null ||
+            GameManager.Instance.CurrentState != GameManager.GameState.Playing) return;
+
+        caughtPlayer = true;
+        foreach (MonsterChase monster in FindObjectsOfType<MonsterChase>(true))
+            monster.Pause();
+
+        GameManager.Instance.EndGame();
     }
 
     private IEnumerator ChaseLoop()
