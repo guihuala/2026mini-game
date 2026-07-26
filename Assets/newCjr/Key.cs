@@ -20,7 +20,7 @@ public class Key : MonoBehaviour
         if (inventory != null)
         {
             inventory.AddKey(keyId);
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }

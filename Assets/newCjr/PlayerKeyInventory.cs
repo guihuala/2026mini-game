@@ -27,4 +27,9 @@ public class PlayerKeyInventory : MonoBehaviour
     {
         AddKey(keyId);
     }
+
+    public void ClearKeys()
+    {
+        keys.Clear();
+    }
 }

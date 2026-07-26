@@ -8,6 +8,21 @@ public class MiniSceneManager : MonoBehaviour
    [SerializeField] private Transform oriPostion;
    [SerializeField] private Transform Player;
 
+   private PlayerKeyInventory playerInventory;
+   private List<GameObject> allKeys = new List<GameObject>();
+   private List<GameObject> allDoors = new List<GameObject>();
+
+   private void Start()
+   {
+      playerInventory = Player.GetComponent<PlayerKeyInventory>();
+
+      foreach (var key in FindObjectsOfType<Key>(true))
+         allKeys.Add(key.gameObject);
+
+      foreach (var door in FindObjectsOfType<Door>(true))
+         allDoors.Add(door.gameObject);
+   }
+
    Coroutine resetCoroutine;
    [Button("ResetPlayer")]
    public void ResetPlayerPos()
@@ -16,7 +31,6 @@ public class MiniSceneManager : MonoBehaviour
       {
          resetCoroutine = StartCoroutine(ResetPlayer());
       }
-        
    }
 
    IEnumerator ResetPlayer()
@@ -40,6 +54,16 @@ public class MiniSceneManager : MonoBehaviour
       {
          Player.position = oriPostion.position;
       }
+
+      // 重置钥匙和门
+      if (playerInventory != null)
+         playerInventory.ClearKeys();
+
+      foreach (var key in allKeys)
+         key.SetActive(true);
+
+      foreach (var door in allDoors)
+         door.SetActive(true);
 
       resetCoroutine = null;
    }

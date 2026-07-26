@@ -20,7 +20,7 @@ public class Door : MonoBehaviour
         if (inventory != null && inventory.HasKey(keyId))
         {
             inventory.RemoveKey(keyId);
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }

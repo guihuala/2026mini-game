@@ -30,7 +30,7 @@ public class MonsterChase : MonoBehaviour
     }
     
     [Button("StartChase")]
-    private void StartChase()
+    public void StartChase()
     {
         if (target != null)
             chaseRoutine = StartCoroutine(ChaseLoop());
