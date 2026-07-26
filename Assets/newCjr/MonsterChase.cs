@@ -28,12 +28,14 @@ public class MonsterChase : MonoBehaviour
         rb.sleepMode = RigidbodySleepMode2D.NeverSleep;
         rb.constraints = RigidbodyConstraints2D.None;
     }
-
-    private void Start()
+    
+    [Button("StartChase")]
+    private void StartChase()
     {
         if (target != null)
             chaseRoutine = StartCoroutine(ChaseLoop());
     }
+    
 
     [Button("Pause")]
     public void Pause()
