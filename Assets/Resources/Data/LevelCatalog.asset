@@ -16,10 +16,10 @@ MonoBehaviour:
   - id: level_01
     displayName: "\u7B2C\u4E00\u5173"
     description: "\u719F\u6089\u573A\u666F\u4E0E\u57FA\u7840\u64CD\u4F5C"
-    sceneName: test_cjr
+    sceneName: Level_1
     preview: {fileID: 0}
   - id: level_02
     displayName: "\u7B2C\u4E8C\u5173"
     description: "\u5B8C\u6210\u7B2C\u4E00\u5173\u540E\u89E3\u9501"
-    sceneName: viewtest
+    sceneName: Level_2
     preview: {fileID: 0}

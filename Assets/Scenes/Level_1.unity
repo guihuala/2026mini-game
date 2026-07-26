@@ -577,7 +577,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 507144573}
-  speed: 5
+  speed: 4
   repathCooldown: 0.5
 --- !u!114 &390558478
 MonoBehaviour:
