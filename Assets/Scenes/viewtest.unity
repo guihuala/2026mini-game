@@ -1221,6 +1221,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  animationFramesPerSecond: 6
+  idleDown: {fileID: 21300000, guid: 0d9eec0d188e640c49c4469701b1d21d, type: 3}
+  idleUp: {fileID: 21300000, guid: 9ca8233a5724344abbcb4f27b64e206c, type: 3}
+  idleLeft: {fileID: 21300000, guid: 1d3e5fe1e72b241ca910a35e6c98a117, type: 3}
+  idleRight: {fileID: 21300000, guid: e8ca28a91cdc2457b9f151ae57e90a05, type: 3}
+  walkDown:
+  - {fileID: 21300000, guid: 349e3a62d987b4132bf0e9aadd85bd55, type: 3}
+  - {fileID: 21300000, guid: 6fd4851283367463b9ee12fba531646d, type: 3}
+  walkUp:
+  - {fileID: 21300000, guid: 3ba3146bb5277426e9fc33e2525a18c8, type: 3}
+  - {fileID: 21300000, guid: 0b4f5c000b0384a7ca0ae3b49661e689, type: 3}
+  walkLeft:
+  - {fileID: 21300000, guid: 2dac56b55cfbd49819d66cad1aa9eaaf, type: 3}
+  - {fileID: 21300000, guid: 8d557d6dda51144d6be8b5f1b5cdf64f, type: 3}
+  walkRight:
+  - {fileID: 21300000, guid: 3616182448eda44f2990a2d647b9e7d3, type: 3}
+  - {fileID: 21300000, guid: a9792936e6dab4b3db7d3265d1fcd51c, type: 3}
 --- !u!114 &507144575
 MonoBehaviour:
   m_ObjectHideFlags: 0
