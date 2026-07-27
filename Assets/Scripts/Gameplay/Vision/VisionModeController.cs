@@ -48,7 +48,6 @@ public class VisionModeController : MonoBehaviour
     public event Action<VisionMode> VisionChanged;
 
     private BlueVisionExploration blueVisionExploration;
-    private VisionTransitionEffect transitionEffect;
 
     private void Start()
     {
@@ -64,13 +63,7 @@ public class VisionModeController : MonoBehaviour
             blueWallRevealDepth,
             blueVisionWallLayers);
 
-        transitionEffect = GetComponent<VisionTransitionEffect>();
-        if (transitionEffect == null)
-            transitionEffect = gameObject.AddComponent<VisionTransitionEffect>();
 
-        Camera mainCamera = Camera.main;
-        if (mainCamera != null && mainCamera.GetComponent<VisionTransitionCameraEffect>() == null)
-            mainCamera.gameObject.AddComponent<VisionTransitionCameraEffect>();
 
         SetVision(initialMode, false);
     }
@@ -117,17 +110,11 @@ public class VisionModeController : MonoBehaviour
 
     public void ToggleVision()
     {
-        if (transitionEffect != null && transitionEffect.IsPlaying)
-            return;
-
         VisionMode nextMode = IsBlueVision ? VisionMode.Red : VisionMode.Blue;
         if (AudioManager.Instance != null)
             AudioManager.Instance.PlaySfx(nextMode == VisionMode.Red ? "切换镜片1" : "切换镜片2");
 
-        if (transitionEffect != null)
-            transitionEffect.Play(nextMode, () => SetVision(nextMode));
-        else
-            SetVision(nextMode);
+        SetVision(nextMode);
     }
 
     public void SetVision(VisionMode mode, bool notify = true)
