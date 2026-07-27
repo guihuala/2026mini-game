@@ -9,9 +9,20 @@ public class TitleUIController : MonoBehaviour
 
     private void Awake()
     {
-        if (newGameButton != null) newGameButton.onClick.AddListener(OnNewGameButtonClicked);
-        if (settingsButton != null) settingsButton.onClick.AddListener(OnSettingsButtonClicked);
-        if (exitButton != null) exitButton.onClick.AddListener(OnExitButtonClicked);
+        BindButton(newGameButton, OnNewGameButtonClicked);
+        BindButton(settingsButton, OnSettingsButtonClicked);
+        BindButton(exitButton, OnExitButtonClicked);
+    }
+
+    private static void BindButton(Button button, UnityEngine.Events.UnityAction action)
+    {
+        if (button == null) return;
+        button.onClick.AddListener(action);
+        button.onClick.AddListener(() =>
+        {
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.PlaySfx("点击按钮");
+        });
     }
 
     public void OnNewGameButtonClicked()

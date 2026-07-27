@@ -41,6 +41,8 @@ public class Monster : MonoBehaviour
 
         hasCaughtPlayer = true;
         Debug.Log($"怪物 {name} 碰到了玩家！");
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlaySfx("吓人");
 
         foreach (MonsterMovement monster in FindObjectsOfType<MonsterMovement>(true))
             monster.Pause();

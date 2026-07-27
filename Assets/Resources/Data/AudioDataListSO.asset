@@ -13,19 +13,23 @@ MonoBehaviour:
   m_Name: AudioDataListSO
   m_EditorClassIdentifier: 
   audioDataList:
-  - audioName: glass_005
-    audioPath: Audio/Sfx/glass_005
-  - audioName: glass_006
-    audioPath: Audio/Sfx/glass_006
-  - audioName: maximize_001
-    audioPath: Audio/Sfx/maximize_001
-  - audioName: maximize_002
-    audioPath: Audio/Sfx/maximize_002
-  - audioName: minimize_008
-    audioPath: Audio/Sfx/minimize_008
-  - audioName: minimize_009
-    audioPath: Audio/Sfx/minimize_009
-  - audioName: scroll_005
-    audioPath: Audio/Sfx/scroll_005
-  - audioName: select_005
-    audioPath: Audio/Sfx/select_005
+  - audioName: 怪物脚步
+    audioPath: Audio/Sfx/怪物脚步
+  - audioName: 点击按钮
+    audioPath: Audio/Sfx/点击按钮
+  - audioName: 切换镜片1
+    audioPath: Audio/Sfx/切换镜片1
+  - audioName: 放上按钮
+    audioPath: Audio/Sfx/放上按钮
+  - audioName: 底噪
+    audioPath: Audio/Sfx/底噪
+  - audioName: 切换镜片2
+    audioPath: Audio/Sfx/切换镜片2
+  - audioName: 吓人
+    audioPath: Audio/Sfx/吓人
+  - audioName: 铃铛
+    audioPath: Audio/Sfx/铃铛
+  - audioName: 人脚步声
+    audioPath: Audio/Sfx/人脚步声
+  - audioName: 开门
+    audioPath: Audio/Sfx/开门

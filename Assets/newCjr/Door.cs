@@ -20,6 +20,8 @@ public class Door : MonoBehaviour
         if (inventory != null && inventory.HasKey(keyId))
         {
             inventory.RemoveKey(keyId);
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.PlaySfx("开门");
             gameObject.SetActive(false);
         }
     }

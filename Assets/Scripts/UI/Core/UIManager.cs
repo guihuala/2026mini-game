@@ -178,10 +178,23 @@ public class UIManager : SingletonPersistent<UIManager>
         }
 
         panel.OpenPanel(name);
+        AddButtonClickSounds(panelObj);
         _panelDict.Add(name, panel);
         RegisterParentChild(name, parentPanelName);
 
         return panel;
+    }
+
+    private static void AddButtonClickSounds(GameObject root)
+    {
+        foreach (Button button in root.GetComponentsInChildren<Button>(true))
+        {
+            button.onClick.AddListener(() =>
+            {
+                if (AudioManager.Instance != null)
+                    AudioManager.Instance.PlaySfx("点击按钮");
+            });
+        }
     }
 
     /// <summary>

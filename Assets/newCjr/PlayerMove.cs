@@ -16,6 +16,8 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private Sprite[] walkUp;
     [SerializeField] private Sprite[] walkLeft;
     [SerializeField] private Sprite[] walkRight;
+    [Header("Audio")]
+    [SerializeField, Min(0.05f)] private float footstepInterval = 0.42f;
 
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
@@ -25,6 +27,7 @@ public class PlayerMove : MonoBehaviour
     private Coroutine disableRoutine;
     private float animationTimer;
     private int animationFrame;
+    private float footstepTimer;
 
     private void Awake()
     {
@@ -69,10 +72,18 @@ public class PlayerMove : MonoBehaviour
     {
         if (!canMove || moveInput.sqrMagnitude < 0.0001f)
         {
+            footstepTimer = 0f;
             animationTimer = 0f;
             animationFrame = 0;
             ShowIdleSprite();
             return;
+        }
+
+        footstepTimer -= Time.deltaTime;
+        if (footstepTimer <= 0f && AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySfx("人脚步声");
+            footstepTimer = footstepInterval;
         }
 
         Vector2 newFacing = GetCardinalDirection(moveInput);

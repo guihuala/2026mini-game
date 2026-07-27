@@ -100,7 +100,10 @@ public class VisionModeController : MonoBehaviour
 
     public void ToggleVision()
     {
-        SetVision(IsBlueVision ? VisionMode.Red : VisionMode.Blue);
+        VisionMode nextMode = IsBlueVision ? VisionMode.Red : VisionMode.Blue;
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlaySfx(nextMode == VisionMode.Red ? "切换镜片1" : "切换镜片2");
+        SetVision(nextMode);
     }
 
     public void SetVision(VisionMode mode, bool notify = true)

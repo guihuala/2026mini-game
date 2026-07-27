@@ -97,11 +97,15 @@ public class GameManager : SingletonPersistent<GameManager>
 
         if (isLevel)
         {
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.PlaySfx("底噪", true);
             if (!UIManager.Instance.IsPanelOpen("HUDPanel"))
                 UIManager.Instance.OpenPanel("HUDPanel", null, UIPanelLayer.Bottom);
         }
         else
         {
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.StopSfx("底噪");
             ClosePanelIfOpen("HUDPanel");
         }
     }

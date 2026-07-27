@@ -20,6 +20,8 @@ public class Key : MonoBehaviour
         if (inventory != null)
         {
             inventory.AddKey(keyId);
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.PlaySfx("铃铛");
             gameObject.SetActive(false);
         }
     }

@@ -45,6 +45,12 @@ public class AudioManager : SingletonPersistent<AudioManager>
     protected override void Awake()
     {
         base.Awake();
+        if (Instance != this) return;
+
+        bgmAudioInfoList ??= new List<AudioInfo>();
+        sfxAudioInfoList ??= new List<AudioInfo>();
+        if (audioDatas == null)
+            audioDatas = Resources.Load<AudioDatas>("Data/AudioDataListSO");
 
         // 创建BGM和SFX的AudioSource根节点
         _bgmSourcesRootGO = new GameObject("BGM_ROOT");
@@ -211,7 +217,14 @@ public class AudioManager : SingletonPersistent<AudioManager>
     /// <param name="loop">是否循环</param>
     public void PlaySfx(string sfxName, bool loop = false)
     {
-        Sequence s = DOTween.Sequence();
+        if (audioDatas == null || audioDatas.audioDataList == null)
+        {
+            Debug.LogWarning("AudioDatas 未配置，无法播放音效：" + sfxName);
+            return;
+        }
+
+        if (loop && sfxAudioInfoList.Exists(x => x.audioName == sfxName && x.audioSource != null))
+            return;
 
         // 从音频列表中寻找
         AudioData sfxData = audioDatas.audioDataList.Find(x => x.audioName == sfxName);
@@ -228,9 +241,23 @@ public class AudioManager : SingletonPersistent<AudioManager>
 
         AudioSource sfxAudioSource = sfxAudioGO.AddComponent<AudioSource>();
         sfxAudioSource.clip = Resources.Load<AudioClip>(sfxData.audioPath);
+        if (sfxAudioSource.clip == null)
+        {
+            Debug.LogWarning($"音效资源加载失败：{sfxData.audioPath}");
+            Destroy(sfxAudioGO);
+            return;
+        }
         sfxAudioSource.loop = loop;
+        sfxAudioSource.volume = mainVolume * sfxVolumeFactor;
         
-        sfxAudioSource.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Master")[2]; // 设置为音频混合器的 "Master" 组，确保应用音量控制
+        if (audioMixer != null)
+        {
+            AudioMixerGroup[] groups = audioMixer.FindMatchingGroups("Sfx");
+            if (groups.Length == 0)
+                groups = audioMixer.FindMatchingGroups("Master");
+            if (groups.Length > 0)
+                sfxAudioSource.outputAudioMixerGroup = groups[groups.Length - 1];
+        }
 
         sfxAudioSource.Play();
 
@@ -265,19 +292,15 @@ public class AudioManager : SingletonPersistent<AudioManager>
     /// <param name="stopSfxName">要停止的音效名称</param>
     public void StopSfx(string stopSfxName)
     {
-        AudioInfo audioInfo = bgmAudioInfoList.Find(x => x.audioName == stopSfxName);
-
-        if (audioInfo == null)
+        foreach (AudioInfo audioInfo in sfxAudioInfoList.FindAll(x => x.audioName == stopSfxName))
         {
-            Debug.LogWarning("未找到sfx：" + stopSfxName);
-            return;
+            if (audioInfo.audioSource != null)
+            {
+                audioInfo.audioSource.Stop();
+                Destroy(audioInfo.audioSource.gameObject);
+            }
+            sfxAudioInfoList.Remove(audioInfo);
         }
-
-        audioInfo.audioSource.Stop();
-
-        bgmAudioInfoList.Remove(audioInfo);
-
-        Destroy(audioInfo.audioSource.gameObject);
     }
 
     /// <summary>
@@ -311,7 +334,8 @@ public class AudioManager : SingletonPersistent<AudioManager>
 
         PlayerPrefs.SetFloat("BgmVolumeFactor", bgmVolumeFactor);
         
-        if (bgmVolumeFactor == 0)
+        if (audioMixer == null) return;
+        if (bgmVolumeFactor == 0 || mainVolume == 0)
         {
             audioMixer.SetFloat(BGM_VOLUME_PARAM, -80f);
         }
@@ -333,7 +357,8 @@ public class AudioManager : SingletonPersistent<AudioManager>
         PlayerPrefs.SetFloat("SfxVolumeFactor", sfxVolumeFactor);
 
         // 如果因子为0，则设置为非常小的音量接近静音
-        if (sfxVolumeFactor == 0)
+        if (audioMixer == null) return;
+        if (sfxVolumeFactor == 0 || mainVolume == 0)
         {
             audioMixer.SetFloat(SFX_VOLUME_PARAM, -80f);
         }
@@ -350,7 +375,7 @@ public class AudioManager : SingletonPersistent<AudioManager>
     IEnumerator DetectingAudioPlayState(AudioInfo info, bool isBgm)
     {
         AudioSource audioSource = info.audioSource;
-        while (audioSource.isPlaying)
+        while (audioSource != null && audioSource.isPlaying)
         {
             yield return null;
         }
@@ -363,6 +388,7 @@ public class AudioManager : SingletonPersistent<AudioManager>
             sfxAudioInfoList.Remove(info);
         }
 
-        Destroy(info.audioSource.gameObject);
+        if (info.audioSource != null)
+            Destroy(info.audioSource.gameObject);
     }
 }
