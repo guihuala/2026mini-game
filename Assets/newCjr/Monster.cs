@@ -21,7 +21,7 @@ public class Monster : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            OnTouchPlayer();
+            OnTouchPlayer(other);
         }
     }
 
@@ -29,12 +29,14 @@ public class Monster : MonoBehaviour
     {
         if (collision.collider.CompareTag("Player"))
         {
-            OnTouchPlayer();
+            OnTouchPlayer(collision.collider);
         }
     }
 
-    private void OnTouchPlayer()
+    private void OnTouchPlayer(Collider2D playerCollider)
     {
+        PlayerHidingState hidingState = playerCollider.GetComponentInParent<PlayerHidingState>();
+        if (hidingState != null && hidingState.IsHidden) return;
         if (hasCaughtPlayer) return;
         if (GameManager.Instance == null ||
             GameManager.Instance.CurrentState != GameManager.GameState.Playing) return;

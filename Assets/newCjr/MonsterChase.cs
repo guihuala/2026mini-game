@@ -18,6 +18,7 @@ public class MonsterChase : MonsterMovement
     private Coroutine chaseRoutine;
     private Vector3 spawnPosition;
     private bool isPaused = true;
+    private PlayerHidingState targetHidingState;
 
     public override bool IsPaused => isPaused;
 
@@ -37,6 +38,8 @@ public class MonsterChase : MonsterMovement
 
     private void Start()
     {
+        if (target != null)
+            targetHidingState = target.GetComponentInParent<PlayerHidingState>();
         if (target != null)
             RequestPath(target.position);
     }
@@ -99,6 +102,15 @@ public class MonsterChase : MonsterMovement
     {
         while (target != null)
         {
+            if (targetHidingState != null && targetHidingState.IsHidden)
+            {
+                waypoints.Clear();
+                rb.velocity = Vector2.zero;
+                yield return new WaitUntil(() =>
+                    target == null || targetHidingState == null || !targetHidingState.IsHidden);
+                continue;
+            }
+
             RequestPath(target.position);
 
             float timeout = 2f;
@@ -144,6 +156,13 @@ public class MonsterChase : MonsterMovement
 
         while (currentIndex < waypoints.Count)
         {
+            if (targetHidingState != null && targetHidingState.IsHidden)
+            {
+                waypoints.Clear();
+                rb.velocity = Vector2.zero;
+                yield break;
+            }
+
             Vector3 nowtarget = waypoints[currentIndex];
             Vector3 current = transform.position;
 

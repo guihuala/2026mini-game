@@ -18,6 +18,7 @@ public class InputManager : SingletonPersistent<InputManager>
     [SerializeField] private List<KeyCode> pauseKeys = new List<KeyCode> { KeyCode.Escape };
     [SerializeField] private List<KeyCode> confirmKeys = new List<KeyCode> { KeyCode.Return, KeyCode.Space };
     [SerializeField] private List<KeyCode> cancelKeys = new List<KeyCode> { KeyCode.Escape };
+    [SerializeField] private List<KeyCode> interactKeys = new List<KeyCode> { KeyCode.E };
 
     private readonly Dictionary<InputActionType, List<KeyCode>> actionKeys = new Dictionary<InputActionType, List<KeyCode>>();
 
@@ -104,6 +105,7 @@ public class InputManager : SingletonPersistent<InputManager>
         actionKeys[InputActionType.Pause] = pauseKeys;
         actionKeys[InputActionType.Confirm] = confirmKeys;
         actionKeys[InputActionType.Cancel] = cancelKeys;
+        actionKeys[InputActionType.Interact] = interactKeys;
     }
 
     private bool CanReadAction(InputActionType action)

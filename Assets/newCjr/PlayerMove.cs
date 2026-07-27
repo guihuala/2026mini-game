@@ -151,6 +151,22 @@ public class PlayerMove : MonoBehaviour
         disableRoutine = StartCoroutine(DisableRoutine(duration));
     }
 
+    public void SetMovementEnabled(bool enabled)
+    {
+        if (disableRoutine != null)
+        {
+            StopCoroutine(disableRoutine);
+            disableRoutine = null;
+        }
+
+        canMove = enabled;
+        if (!enabled)
+        {
+            moveInput = Vector2.zero;
+            rb.velocity = Vector2.zero;
+        }
+    }
+
     private IEnumerator DisableRoutine(float duration)
     {
         canMove = false;

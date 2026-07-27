@@ -557,21 +557,10 @@ MonoBehaviour:
   scaleAnimation: 1
   scaleFrom: {x: 0.8, y: 0.8}
   scaleDuration: 0.3
-  audioTabButton: {fileID: 0}
-  videoTabButton: {fileID: 0}
-  inputTabButton: {fileID: 0}
-  audioPage: {fileID: 5132699598447333950}
-  videoPage: {fileID: 0}
-  inputPage: {fileID: 0}
   bgmVolumeSlider: {fileID: 1240990137728481724}
   sfxVolumeSlider: {fileID: 1490137879391771039}
-  resolutionDropdown: {fileID: 0}
-  fullscreenToggle: {fileID: 0}
-  chineseLanguageButton: {fileID: 0}
-  englishLanguageButton: {fileID: 0}
   clearDataButton: {fileID: 0}
   backButton: {fileID: 3286449910231116202}
-  resetButton: {fileID: 0}
 --- !u!114 &7732567208515331411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1153,7 +1142,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -459.30005, y: -280.6}
+  m_AnchoredPosition: {x: -459.30005, y: -270.4}
   m_SizeDelta: {x: 56.25, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4965513190818520347
