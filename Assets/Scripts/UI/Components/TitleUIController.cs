@@ -6,6 +6,9 @@ public class TitleUIController : MonoBehaviour
     public Button newGameButton;
     public Button settingsButton;
     public Button exitButton;
+    [Header("Opening CG")]
+    [SerializeField] private Sprite[] openingCGFrames;
+    [SerializeField] private Font openingFont;
 
     private void Awake()
     {
@@ -27,10 +30,17 @@ public class TitleUIController : MonoBehaviour
 
     public void OnNewGameButtonClicked()
     {
+        bool isNewGame = SaveManager.Instance == null || !SaveManager.Instance.HasSave();
         if (SaveManager.Instance != null)
         {
-            if (SaveManager.Instance.HasSave()) SaveManager.Instance.LoadGame();
+            if (!isNewGame) SaveManager.Instance.LoadGame();
             else SaveManager.Instance.NewGame();
+        }
+
+        if (isNewGame && openingCGFrames != null && openingCGFrames.Length > 0)
+        {
+            OpeningCGPlayer.Play(openingCGFrames, openingFont, OpenLevelSelect);
+            return;
         }
 
         OpenLevelSelect();

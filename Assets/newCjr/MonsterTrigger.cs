@@ -3,7 +3,8 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public class MonsterTrigger : MonoBehaviour
 {
-    [SerializeField] private MonsterChase monster;
+    [Tooltip("触发后开始移动的怪物。可选择追逐怪（MonsterChase）或路径怪（FixedPathMonster）。")]
+    [SerializeField] private MonsterMovement monster;
 
     private void Awake()
     {
@@ -18,7 +19,7 @@ public class MonsterTrigger : MonoBehaviour
         if (monster != null)
         {
             CameraShake.Shake(0.2f, 0.1f, 22f);
-            monster.StartChase();
+            monster.StartMoving();
         }
     }
 }
