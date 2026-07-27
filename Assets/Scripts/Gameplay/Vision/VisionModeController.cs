@@ -14,6 +14,8 @@ public class VisionModeController : MonoBehaviour
     [SerializeField] private Renderer[] mapRenderers;
     [Tooltip("Only the renderers under these objects are shown in red vision; their colliders and behaviours stay active.")]
     [SerializeField] private GameObject[] interactableObjects;
+    [Tooltip("Renderers under these objects stay visible in both blue and red vision.")]
+    [SerializeField] private GameObject[] visibleInBothModesObjects;
     [Tooltip("Automatically treats every Portal in the scene as a red-vision interactable.")]
     [SerializeField] private bool includePortalsAsRedInteractables = true;
 
@@ -46,6 +48,7 @@ public class VisionModeController : MonoBehaviour
     public event Action<VisionMode> VisionChanged;
 
     private BlueVisionExploration blueVisionExploration;
+    private VisionTransitionEffect transitionEffect;
 
     private void Start()
     {
@@ -60,6 +63,14 @@ public class VisionModeController : MonoBehaviour
             blueRevealDuration,
             blueWallRevealDepth,
             blueVisionWallLayers);
+
+        transitionEffect = GetComponent<VisionTransitionEffect>();
+        if (transitionEffect == null)
+            transitionEffect = gameObject.AddComponent<VisionTransitionEffect>();
+
+        Camera mainCamera = Camera.main;
+        if (mainCamera != null && mainCamera.GetComponent<VisionTransitionCameraEffect>() == null)
+            mainCamera.gameObject.AddComponent<VisionTransitionCameraEffect>();
 
         SetVision(initialMode, false);
     }
@@ -106,10 +117,17 @@ public class VisionModeController : MonoBehaviour
 
     public void ToggleVision()
     {
+        if (transitionEffect != null && transitionEffect.IsPlaying)
+            return;
+
         VisionMode nextMode = IsBlueVision ? VisionMode.Red : VisionMode.Blue;
         if (AudioManager.Instance != null)
             AudioManager.Instance.PlaySfx(nextMode == VisionMode.Red ? "切换镜片1" : "切换镜片2");
-        SetVision(nextMode);
+
+        if (transitionEffect != null)
+            transitionEffect.Play(nextMode, () => SetVision(nextMode));
+        else
+            SetVision(nextMode);
     }
 
     public void SetVision(VisionMode mode, bool notify = true)
@@ -146,6 +164,19 @@ public class VisionModeController : MonoBehaviour
             {
                 if (portals[i] != null)
                     portals[i].gameObject.SetActive(redActive);
+            }
+        }
+
+        int bothModesObjectCount = visibleInBothModesObjects?.Length ?? 0;
+        for (int i = 0; i < bothModesObjectCount; i++)
+        {
+            if (visibleInBothModesObjects[i] == null)
+                continue;
+
+            Renderer[] renderers = visibleInBothModesObjects[i].GetComponentsInChildren<Renderer>(true);
+            for (int j = 0; j < renderers.Length; j++)
+            {
+                renderers[j].enabled = true;
             }
         }
 
