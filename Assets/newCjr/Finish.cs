@@ -3,6 +3,10 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public class Finish : MonoBehaviour
 {
+    [Header("通关 CG（可选）")]
+    [Tooltip("配置后，胜利结算时会依次全屏播放这些图片；留空则直接显示胜利面板。")]
+    [SerializeField] private Sprite[] endingCGFrames;
+
     private void Awake()
     {
         GetComponent<Collider2D>().isTrigger = true;
@@ -27,6 +31,9 @@ public class Finish : MonoBehaviour
         if (GameManager.Instance != null)
         {
             GameManager.Instance.CompleteLevel();
+
+            if (endingCGFrames != null && endingCGFrames.Length > 0)
+                EndingCGPlayer.Play(endingCGFrames);
         }
         else
         {
