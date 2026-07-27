@@ -12,7 +12,7 @@ public class VisionModeController : MonoBehaviour
     [Header("Visible Content")]
     [Tooltip("Only rendering is toggled so the map colliders remain active in both modes.")]
     [SerializeField] private Renderer[] mapRenderers;
-    [Tooltip("Only the renderers under these objects are shown in red vision; their colliders and behaviours stay active.")]
+    [Tooltip("These objects are active only in red vision.")]
     [SerializeField] private GameObject[] interactableObjects;
     [Tooltip("Renderers under these objects stay visible in both blue and red vision.")]
     [SerializeField] private GameObject[] visibleInBothModesObjects;
@@ -135,13 +135,7 @@ public class VisionModeController : MonoBehaviour
         for (int i = 0; i < interactableObjects.Length; i++)
         {
             if (interactableObjects[i] != null)
-            {
-                Renderer[] renderers = interactableObjects[i].GetComponentsInChildren<Renderer>(true);
-                for (int j = 0; j < renderers.Length; j++)
-                {
-                    renderers[j].enabled = redActive;
-                }
-            }
+                interactableObjects[i].SetActive(redActive);
         }
 
         if (includePortalsAsRedInteractables)

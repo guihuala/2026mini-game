@@ -9446,7 +9446,7 @@ Transform:
   m_LocalScale: {x: 0.70690584, y: 0.19966047, z: 0.4103}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1941656933}
+  m_Father: {fileID: 1731796908}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &781884865
 MonoBehaviour:
@@ -9494,7 +9494,7 @@ Transform:
   m_LocalScale: {x: 0.64735025, y: 0.36890095, z: 0.64735025}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1941656933}
+  m_Father: {fileID: 1731796908}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &791899420
 MonoBehaviour:
@@ -9954,6 +9954,39 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e2a24e8c9d33f4d1c91691f9b326cb90, type: 3}
+--- !u!1 &1731796907
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1731796908}
+  m_Layer: 0
+  m_Name: key
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1731796908
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1731796907}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -5.7172146, y: -2.8578029, z: 0.07988469}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 781884864}
+  - {fileID: 791899419}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1754799058
 GameObject:
   m_ObjectHideFlags: 0
@@ -10203,9 +10236,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 781884864}
   - {fileID: 432460299}
-  - {fileID: 791899419}
   - {fileID: 1865148483}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -10389,6 +10420,8 @@ MonoBehaviour:
   mapRenderers:
   - {fileID: 617925725}
   interactableObjects:
+  - {fileID: 1731796907}
+  visibleInBothModesObjects:
   - {fileID: 1941656932}
   - {fileID: 798440013}
   includePortalsAsRedInteractables: 1
@@ -10415,6 +10448,7 @@ SceneRoots:
   - {fileID: 1096344116}
   - {fileID: 1754799059}
   - {fileID: 1941656933}
+  - {fileID: 1731796908}
   - {fileID: 94533280}
   - {fileID: 202802180}
   - {fileID: 2100000001}
