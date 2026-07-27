@@ -36,6 +36,10 @@ public class VisionModeController : MonoBehaviour
     [Header("Initial State")]
     [SerializeField] private VisionMode initialMode = VisionMode.Blue;
 
+    [Header("Switching")]
+    [Tooltip("Minimum time in seconds between player-triggered vision switches.")]
+    [SerializeField, Min(0f)] private float switchCooldown = 0.5f;
+
     [Header("Visual Feedback")]
     [SerializeField] private Color blueTint = new Color(0.05f, 0.3f, 1f, 0.12f);
     [SerializeField] private Color redTint = new Color(1f, 0.05f, 0.05f, 0.16f);
@@ -48,6 +52,7 @@ public class VisionModeController : MonoBehaviour
     public event Action<VisionMode> VisionChanged;
 
     private BlueVisionExploration blueVisionExploration;
+    private float nextSwitchTime;
 
     private void Start()
     {
@@ -110,6 +115,11 @@ public class VisionModeController : MonoBehaviour
 
     public void ToggleVision()
     {
+        if (Time.unscaledTime < nextSwitchTime)
+            return;
+
+        nextSwitchTime = Time.unscaledTime + switchCooldown;
+
         VisionMode nextMode = IsBlueVision ? VisionMode.Red : VisionMode.Blue;
         if (AudioManager.Instance != null)
             AudioManager.Instance.PlaySfx(nextMode == VisionMode.Red ? "切换镜片1" : "切换镜片2");
@@ -120,6 +130,8 @@ public class VisionModeController : MonoBehaviour
     public void SetVision(VisionMode mode, bool notify = true)
     {
         CurrentMode = mode;
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayVisionModeBgm(mode);
 
         bool blueActive = mode == VisionMode.Blue;
         if (blueVisionExploration != null)

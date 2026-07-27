@@ -14,6 +14,11 @@ public class AudioInfo
 
 public class AudioManager : SingletonPersistent<AudioManager>
 {
+    [Header("Vision Mode BGM")]
+    [SerializeField] private List<string> blueVisionBgmNames = new List<string>();
+    [SerializeField] private List<string> redVisionBgmNames = new List<string>();
+    [SerializeField, Min(0f)] private float visionBgmFadeDuration = 0.5f;
+
     // 存储所有BGM的音频信息
     public List<AudioInfo> bgmAudioInfoList;
 
@@ -34,6 +39,7 @@ public class AudioManager : SingletonPersistent<AudioManager>
 
     private GameObject _bgmSourcesRootGO;
     private GameObject _sfxSourcesRootGO;
+    private string _currentVisionBgmName;
 
     // 引用AudioMixer
     public AudioMixer audioMixer;
@@ -44,6 +50,16 @@ public class AudioManager : SingletonPersistent<AudioManager>
     
     protected override void Awake()
     {
+        // The manager persists between scenes, while each scene can override its
+        // Vision BGM lists on the manager prefab instance. Copy those overrides
+        // to the surviving singleton before the duplicate is destroyed.
+        if (Instance != null && Instance != this)
+        {
+            Instance.ApplyVisionBgmConfiguration(this);
+            base.Awake();
+            return;
+        }
+
         base.Awake();
         if (Instance != this) return;
 
@@ -65,11 +81,69 @@ public class AudioManager : SingletonPersistent<AudioManager>
         sfxVolumeFactor = PlayerPrefs.GetFloat("SfxVolumeFactor", .8f);
     }
 
+    private void ApplyVisionBgmConfiguration(AudioManager source)
+    {
+        if (!string.IsNullOrWhiteSpace(_currentVisionBgmName))
+        {
+            AudioInfo currentBgm = bgmAudioInfoList.Find(
+                info => info.audioName == _currentVisionBgmName && info.audioSource != null);
+            if (currentBgm != null)
+                StopBgm(_currentVisionBgmName, source.visionBgmFadeDuration);
+        }
+
+        blueVisionBgmNames = source.blueVisionBgmNames != null
+            ? new List<string>(source.blueVisionBgmNames)
+            : new List<string>();
+        redVisionBgmNames = source.redVisionBgmNames != null
+            ? new List<string>(source.redVisionBgmNames)
+            : new List<string>();
+        visionBgmFadeDuration = source.visionBgmFadeDuration;
+        _currentVisionBgmName = null;
+    }
+
     private void Start()
     {
         // 初始化AudioMixer的音量
         ChangeBgmVolume(bgmVolumeFactor);
         ChangeSfxVolume(sfxVolumeFactor);
+    }
+
+    /// <summary>
+    /// 播放当前视觉模式配置的BGM，并淡出上一个视觉模式的BGM。
+    /// 音乐名称对应 AudioDataListSO 中的 audioName。
+    /// </summary>
+    public void PlayVisionModeBgm(VisionMode mode)
+    {
+        List<string> candidates = mode == VisionMode.Blue ? blueVisionBgmNames : redVisionBgmNames;
+        string nextBgmName = ChooseVisionBgm(candidates);
+        if (string.IsNullOrWhiteSpace(nextBgmName) || nextBgmName == _currentVisionBgmName)
+            return;
+
+        if (audioDatas == null || audioDatas.audioDataList == null ||
+            audioDatas.audioDataList.Find(x => x.audioName == nextBgmName) == null)
+        {
+            Debug.LogWarning($"未找到 {mode} Vision BGM：{nextBgmName}");
+            return;
+        }
+
+        string previousBgmName = _currentVisionBgmName;
+        _currentVisionBgmName = nextBgmName;
+        PlayBgm(nextBgmName, previousBgmName, visionBgmFadeDuration, visionBgmFadeDuration);
+    }
+
+    private string ChooseVisionBgm(List<string> candidates)
+    {
+        if (candidates == null || candidates.Count == 0)
+            return null;
+
+        List<string> availableNames = candidates.FindAll(name =>
+            !string.IsNullOrWhiteSpace(name) &&
+            (candidates.Count == 1 || name != _currentVisionBgmName));
+
+        if (availableNames.Count == 0)
+            return null;
+
+        return availableNames[UnityEngine.Random.Range(0, availableNames.Count)];
     }
 
 
@@ -81,7 +155,7 @@ public class AudioManager : SingletonPersistent<AudioManager>
         Sequence s = DOTween.Sequence();
 
         // 如果需要淡出某个BGM
-        if (fadeOutMusicName != "")
+        if (!string.IsNullOrEmpty(fadeOutMusicName))
         {
             AudioInfo fadeOutInfo = bgmAudioInfoList.Find(x => x.audioName == fadeOutMusicName);
 
