@@ -3,6 +3,5 @@ public enum InputActionType
     Pause = 3,
     Confirm = 4,
     Cancel = 5,
-    SwitchVision = 6,
-    Interact = 7
+    SwitchVision = 6
 }

@@ -6,7 +6,10 @@ using UnityEngine;
 public class LevelDefinition
 {
     public string id;
+    public string displayName;
+    [TextArea] public string description;
     public string sceneName;
+    public Sprite preview;
 }
 
 [CreateAssetMenu(fileName = "LevelCatalog", menuName = "Template/Scene Flow/Level Catalog")]
