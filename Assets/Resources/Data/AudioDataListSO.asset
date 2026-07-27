@@ -13,23 +13,25 @@ MonoBehaviour:
   m_Name: AudioDataListSO
   m_EditorClassIdentifier: 
   audioDataList:
-  - audioName: 怪物脚步
-    audioPath: Audio/Sfx/怪物脚步
-  - audioName: 点击按钮
-    audioPath: Audio/Sfx/点击按钮
-  - audioName: 切换镜片1
-    audioPath: Audio/Sfx/切换镜片1
-  - audioName: 放上按钮
-    audioPath: Audio/Sfx/放上按钮
-  - audioName: 底噪
-    audioPath: Audio/Sfx/底噪
-  - audioName: 切换镜片2
-    audioPath: Audio/Sfx/切换镜片2
-  - audioName: 吓人
-    audioPath: Audio/Sfx/吓人
-  - audioName: 铃铛
-    audioPath: Audio/Sfx/铃铛
-  - audioName: 人脚步声
-    audioPath: Audio/Sfx/人脚步声
-  - audioName: 开门
-    audioPath: Audio/Sfx/开门
+  - audioName: "\u602A\u7269\u811A\u6B65"
+    audioPath: "Audio/Sfx/\u602A\u7269\u811A\u6B65"
+  - audioName: "\u70B9\u51FB\u6309\u94AE"
+    audioPath: "Audio/Sfx/\u70B9\u51FB\u6309\u94AE"
+  - audioName: "\u5207\u6362\u955C\u72471"
+    audioPath: "Audio/Sfx/\u5207\u6362\u955C\u72471"
+  - audioName: "\u653E\u4E0A\u6309\u94AE"
+    audioPath: "Audio/Sfx/\u653E\u4E0A\u6309\u94AE"
+  - audioName: "\u5E95\u566A"
+    audioPath: "Audio/Sfx/\u5E95\u566A"
+  - audioName: "\u5207\u6362\u955C\u72472"
+    audioPath: "Audio/Sfx/\u5207\u6362\u955C\u72472"
+  - audioName: "\u5413\u4EBA"
+    audioPath: "Audio/Sfx/\u5413\u4EBA"
+  - audioName: "\u94C3\u94DB"
+    audioPath: "Audio/Sfx/\u94C3\u94DB"
+  - audioName: "\u4EBA\u811A\u6B65\u58F0"
+    audioPath: "Audio/Sfx/\u4EBA\u811A\u6B65\u58F0"
+  - audioName: "\u5F00\u95E8"
+    audioPath: "Audio/Sfx/\u5F00\u95E8"
+  - audioName: "\u5FC3\u8DF3"
+    audioPath: Audio/HeartBeat

@@ -43,6 +43,9 @@ public class MainMenuVisionController : MonoBehaviour
     public void SetVision(VisionMode mode)
     {
         CurrentMode = mode;
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayVisionModeBgm(mode);
+
         SetVisualState(blueVisionObjects, mode == VisionMode.Blue);
         SetVisualState(redVisionObjects, mode == VisionMode.Red);
     }

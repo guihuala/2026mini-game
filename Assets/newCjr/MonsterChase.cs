@@ -44,6 +44,27 @@ public class MonsterChase : MonsterMovement
             RequestPath(target.position);
     }
 
+    private void OnEnable()
+    {
+        if (!isPaused && target != null && chaseRoutine == null)
+            chaseRoutine = StartCoroutine(ChaseLoop());
+    }
+
+    private void OnDisable()
+    {
+        if (chaseRoutine != null)
+        {
+            StopCoroutine(chaseRoutine);
+            chaseRoutine = null;
+        }
+
+        waypoints.Clear();
+        currentIndex = 0;
+
+        if (rb != null)
+            rb.velocity = Vector2.zero;
+    }
+
     [Button("StartChase")]
     public void StartChase()
     {
