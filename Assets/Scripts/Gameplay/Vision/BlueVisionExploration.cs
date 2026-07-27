@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 /// <summary>
 /// Permanently reveals a wall-occluded cone in front of the player.
@@ -11,9 +12,11 @@ public class BlueVisionExploration : MonoBehaviour
     [SerializeField, Range(1f, 360f)] private float viewAngle = 90f;
     [SerializeField, Range(8, 360)] private int rayCount = 121;
     [SerializeField] private LayerMask wallLayers = ~0;
+    [SerializeField, Min(0f)] private float wallRevealDepth = 1.25f;
 
     [Header("Exploration Texture")]
     [SerializeField, Range(1f, 32f)] private float pixelsPerUnit = 8f;
+    [SerializeField, Min(0f)] private float revealDuration = 0.35f;
 
     private readonly RaycastHit2D[] hits = new RaycastHit2D[32];
     private Renderer[] mapRenderers;
@@ -24,6 +27,9 @@ public class BlueVisionExploration : MonoBehaviour
     private Vector2 facingDirection = Vector2.down;
     private Texture2D exploredTexture;
     private Color32[] exploredPixels;
+    private bool[] exploredTargets;
+    private bool[] fadingPixelFlags;
+    private readonly List<int> fadingPixels = new List<int>();
     private Bounds mapBounds;
     private bool initialized;
 
@@ -32,12 +38,16 @@ public class BlueVisionExploration : MonoBehaviour
         float distance,
         float angle,
         int rays,
+        float fadeDuration,
+        float revealDepth,
         LayerMask blockingLayers)
     {
         mapRenderers = renderers;
         viewDistance = Mathf.Max(0.1f, distance);
         viewAngle = Mathf.Clamp(angle, 1f, 360f);
         rayCount = Mathf.Clamp(rays, 8, 360);
+        revealDuration = Mathf.Max(0f, fadeDuration);
+        wallRevealDepth = Mathf.Max(0f, revealDepth);
         wallLayers = blockingLayers;
         GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
         player = playerObject != null ? playerObject.transform : null;
@@ -60,6 +70,8 @@ public class BlueVisionExploration : MonoBehaviour
             wrapMode = TextureWrapMode.Clamp
         };
         exploredPixels = new Color32[width * height];
+        exploredTargets = new bool[width * height];
+        fadingPixelFlags = new bool[width * height];
         exploredTexture.SetPixels32(exploredPixels);
         exploredTexture.Apply(false, false);
 
@@ -144,6 +156,7 @@ public class BlueVisionExploration : MonoBehaviour
             changed |= MarkRay(origin, direction, GetVisibleDistance(origin, direction));
         }
 
+        changed |= UpdateRevealFade();
         if (!changed)
             return;
 
@@ -167,6 +180,12 @@ public class BlueVisionExploration : MonoBehaviour
 
             nearest = Mathf.Min(nearest, hits[i].distance);
         }
+        // The collision point is normally the near face of a wall. Reveal a
+        // little farther into the blocker so the wall sprite is not cut in half,
+        // while rays still never continue exploring through that wall.
+        if (nearest < viewDistance)
+            nearest += wallRevealDepth;
+
         return nearest;
     }
 
@@ -213,14 +232,46 @@ public class BlueVisionExploration : MonoBehaviour
                     continue;
 
                 int index = pixelY * exploredTexture.width + pixelX;
-                if (exploredPixels[index].r == 255)
+                if (exploredTargets[index])
                     continue;
 
-                exploredPixels[index] = new Color32(255, 255, 255, 255);
+                exploredTargets[index] = true;
+                if (revealDuration <= 0f)
+                {
+                    exploredPixels[index] = new Color32(255, 255, 255, 255);
+                }
+                else if (!fadingPixelFlags[index])
+                {
+                    fadingPixelFlags[index] = true;
+                    fadingPixels.Add(index);
+                }
                 changed = true;
             }
         }
         return changed;
+    }
+
+    private bool UpdateRevealFade()
+    {
+        if (fadingPixels.Count == 0)
+            return false;
+
+        int amount = revealDuration <= 0f
+            ? 255
+            : Mathf.Max(1, Mathf.CeilToInt(255f * Time.deltaTime / revealDuration));
+
+        for (int i = fadingPixels.Count - 1; i >= 0; i--)
+        {
+            int index = fadingPixels[i];
+            byte value = (byte)Mathf.Min(255, exploredPixels[index].r + amount);
+            exploredPixels[index] = new Color32(value, value, value, value);
+            if (value < 255)
+                continue;
+
+            fadingPixelFlags[index] = false;
+            fadingPixels.RemoveAt(i);
+        }
+        return true;
     }
 
     private void OnDestroy()

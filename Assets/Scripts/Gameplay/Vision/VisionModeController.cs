@@ -24,6 +24,10 @@ public class VisionModeController : MonoBehaviour
     [SerializeField, Range(1f, 360f)] private float blueViewAngle = 90f;
     [Tooltip("More rays produce smoother wall edges but cost more physics queries.")]
     [SerializeField, Range(8, 360)] private int blueViewRayCount = 121;
+    [Tooltip("Seconds for a newly seen area to fade from hidden to fully visible.")]
+    [SerializeField, Min(0f)] private float blueRevealDuration = 0.35f;
+    [Tooltip("Extra distance revealed into a blocking wall so its complete sprite is visible.")]
+    [SerializeField, Min(0f)] private float blueWallRevealDepth = 1.25f;
     [Tooltip("Collider layers that block blue vision.")]
     [SerializeField] private LayerMask blueVisionWallLayers = ~0;
 
@@ -53,6 +57,8 @@ public class VisionModeController : MonoBehaviour
             blueViewDistance,
             blueViewAngle,
             blueViewRayCount,
+            blueRevealDuration,
+            blueWallRevealDepth,
             blueVisionWallLayers);
 
         SetVision(initialMode, false);

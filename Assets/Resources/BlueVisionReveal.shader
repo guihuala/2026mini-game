@@ -63,9 +63,11 @@ Shader "Hidden/BlueVisionReveal"
             {
                 float2 exploredUv = (input.worldPosition - _WorldRect.xy) / _WorldRect.zw;
                 fixed explored = tex2D(_ExploredTex, exploredUv).r;
-                clip(explored - 0.01);
+                fixed visibility = smoothstep(0.0, 1.0, explored);
+                clip(visibility - 0.001);
 
                 fixed4 color = tex2D(_MainTex, input.uv) * input.color;
+                color.a *= visibility;
                 color.rgb *= color.a;
                 return color;
             }

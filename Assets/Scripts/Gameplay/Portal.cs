@@ -77,6 +77,8 @@ public class Portal : MonoBehaviour
         }
 
         Physics2D.SyncTransforms();
+        // CameraShake 会在首次调用时自动挂载到 Main Camera。
+        CameraShake.Shake(0.16f, 0.08f, 20f);
     }
 
     private static bool TryGetPlayer(

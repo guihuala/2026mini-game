@@ -362,6 +362,7 @@ GameObject:
   - component: {fileID: 739666820}
   - component: {fileID: 739666819}
   - component: {fileID: 739666818}
+  - component: {fileID: 739666821}
   m_Layer: 5
   m_Name: Bg
   m_TagString: Untagged
@@ -405,6 +406,23 @@ MonoBehaviour:
   newGameButton: {fileID: 839880491}
   settingsButton: {fileID: 1169643360}
   exitButton: {fileID: 889894938}
+--- !u!114 &739666821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 739666816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e7d773e2a2540fe8dcaec2c60d54271, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  blueVisionObjects:
+  - {fileID: 1436411385}
+  redVisionObjects:
+  - {fileID: 1399114517}
+  initialMode: 0
 --- !u!114 &739666819
 MonoBehaviour:
   m_ObjectHideFlags: 0

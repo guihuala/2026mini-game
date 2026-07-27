@@ -201,6 +201,15 @@ public class GameManager : SingletonPersistent<GameManager>
         ClosePanelIfOpen("GameResultPanel");
         ClosePanelIfOpen("PausePanel");
 
+        // 先留出一小段可见时间展示相机震动，再盖上抓捕遮罩。
+        CameraShake.Shake(0.24f, 0.3f, 30f);
+        float shakeLeadTime = 0.14f;
+        while (shakeLeadTime > 0f)
+        {
+            shakeLeadTime -= Time.unscaledDeltaTime;
+            yield return null;
+        }
+
         EnsureCaughtOverlay();
         caughtOverlay.gameObject.SetActive(true);
         caughtOverlay.alpha = 1f;

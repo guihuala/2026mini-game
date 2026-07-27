@@ -14,6 +14,9 @@ public class MonsterTrigger : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
         if (monster != null)
+        {
+            CameraShake.Shake(0.2f, 0.1f, 22f);
             monster.StartChase();
+        }
     }
 }
